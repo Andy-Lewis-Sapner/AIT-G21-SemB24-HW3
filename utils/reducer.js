@@ -2,7 +2,7 @@ export const initialState = {
   preferredCurrency: "USD",
   chosenCrypto: "BTC",
   exchangeMode: "Regular",
-  user: undefined,
+  user: typeof window !== "undefined" ? localStorage.getItem("user") : null,
   user_balance: undefined,
   user_competitions: undefined,
   prices: {},
@@ -26,6 +26,8 @@ export const reducer = (state, action) => {
         exchangeMode: action.payload,
       }
     case "SET_USER":
+      if (action.payload) localStorage.setItem("user", action.payload)
+      else localStorage.removeItem("user")
       return {
         ...state,
         user: action.payload,

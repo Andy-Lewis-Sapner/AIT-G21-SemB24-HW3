@@ -1,11 +1,24 @@
 import { fetchBalancesForUser, fetchUser } from "@/utils/supabaseService"
 import { useEffect, useState } from "react"
 import { usePageContext } from "@/utils/context"
+import { useRouter } from "next/router"
 
 export default function Balance({ rates, symbols }) {
   const { state, dispatch } = usePageContext()
   const [holdings, setHoldings] = useState({})
-  const [usdBalance, setUsdBalance] = useState(0)
+  const [balance, setBalance] = useState(0)
+  const router = useRouter()
+  const [currencies, setCurrencies] = useState({})
+
+  useEffect(() => {
+    const fetchCurrenciesSymbols = async () => {
+      const res = await fetch("./currencies.json")
+      const data = await res.json()
+      setCurrencies(data)
+    }
+
+    fetchCurrenciesSymbols()
+  }, [])
 
   const fetchBalances = async () => {
     let res
@@ -20,7 +33,7 @@ export default function Balance({ rates, symbols }) {
         acc[key] = value
       }
       if (key === "USD" || key === "balance") {
-        setUsdBalance(value)
+        setBalance(value)
       }
       return acc
     }, {})
@@ -43,7 +56,7 @@ export default function Balance({ rates, symbols }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {holdings &&
             Object.entries(holdings).map(([crypto, amount]) => {
-              const usdValue = amount.toFixed(2)
+              const value = amount.toFixed(2) * rates[state.preferredCurrency]
               return (
                 <div
                   key={crypto}
@@ -51,7 +64,8 @@ export default function Balance({ rates, symbols }) {
                 >
                   <h4 className="text-lg font-medium">{crypto}</h4>
                   <p className="text-gray-600 dark:text-gray-300">
-                    Value: ${usdValue}
+                    Value:{" "}
+                    {`${value.toFixed(2)}${currencies[state.preferredCurrency]}`}
                   </p>
                 </div>
               )
@@ -59,8 +73,27 @@ export default function Balance({ rates, symbols }) {
         </div>
       </div>
       <div className="text-center">
-        <h3 className="text-xl font-semibold mb-2">USD Balance:</h3>
-        <p className="text-2xl font-bold">${usdBalance.toFixed(2)}</p>
+        <h3 className="text-xl font-semibold mb-2">
+          {`${state.preferredCurrency}`} Balance:
+        </h3>
+        <p className="text-2xl font-bold">
+          {(balance * rates[state.preferredCurrency]).toFixed(2)}
+          {currencies[state.preferredCurrency]}
+        </p>
+      </div>
+      <div className="flex justify-center gap-4 mt-4">
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          onClick={() => router.push("/Deposit")}
+        >
+          Deposit
+        </button>
+        <button
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          onClick={() => router.push("/Withdraw")}
+        >
+          Withdraw
+        </button>
       </div>
     </div>
   )

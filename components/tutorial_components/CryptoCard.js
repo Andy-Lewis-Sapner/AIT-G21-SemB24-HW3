@@ -1,10 +1,12 @@
+import Image from "next/image"
+
 // Component to display individual cryptocurrency information
 const CryptoCard = ({ crypto }) => {
   return (
     // Container for each crypto card with styling
     <div className="bg-white p-6 rounded-lg shadow-md flex items-start">
       {/* Displaying crypto image */}
-      <img
+      <Image
         src={crypto.image}
         alt={crypto.name}
         className="w-12 h-12 rounded-md mr-4 mt-1"

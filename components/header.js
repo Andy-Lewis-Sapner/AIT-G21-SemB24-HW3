@@ -6,12 +6,11 @@ export default function Header() {
   const router = useRouter()
   const [hiddenClass, setHiddenClass] = useState("")
   const handleClick = (text) => {
-    if (state.user === undefined) {
+    if (state.user) router.push("/" + text)
+    else {
       if (text === "Register") router.push("/Register")
       else if (text === "") router.push("/")
       else router.push("/Login")
-    } else {
-      router.push("/" + text)
     }
   }
   useEffect(() => {

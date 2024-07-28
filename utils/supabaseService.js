@@ -82,16 +82,23 @@ export const insertNewUser = async (id, username, password) => {
 }
 
 export const updateData = async (username, newUsdAmount, symbol, newAmount) => {
-  console.log("Updating data for user:", username)
-  console.log("New USD Amount:", newUsdAmount)
-  console.log(`New ${symbol} Amount:`, newAmount)
-  const { error } = await supabase
-    .from("Users")
-    .update({ USD: newUsdAmount, [symbol]: newAmount })
-    .eq("username", username)
+  let updateError = null
+  if (symbol) {
+    const { error } = await supabase
+      .from("Users")
+      .update({ USD: newUsdAmount, [symbol]: newAmount })
+      .eq("username", username)
+    updateError = error
+  } else {
+    const { error } = await supabase
+      .from("Users")
+      .update({ USD: newUsdAmount })
+      .eq("username", username)
+    updateError = error
+  }
 
-  if (error) {
-    console.error("Error updating data:", error)
+  if (updateError) {
+    console.error("Error updating data:", updateError)
     return false
   }
   return true

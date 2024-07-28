@@ -52,11 +52,11 @@ export default function Trading({ rates, symbols }) {
   const tabs = [
     {
       label: "Buy",
-      content: <BuyTab symbols={symbols} />,
+      content: <BuyTab symbols={symbols} rates={rates} />,
     },
     {
       label: "Sell",
-      content: <SellTab symbols={symbols} />,
+      content: <SellTab symbols={symbols} rates={rates} />,
     },
   ]
 

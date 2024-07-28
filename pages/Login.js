@@ -76,7 +76,7 @@ export default function Login() {
           <div className="flex flex-col items-center justify-center pt-2">
             <p className="text-red-500 mb-3">{userMessage}</p>
             <p className="mb-3">
-              Don't have an account? Press here to{" "}
+              Don&apos;t have an account? Press here to{" "}
               <Link href="/Register" className="text-blue-500">
                 Register
               </Link>

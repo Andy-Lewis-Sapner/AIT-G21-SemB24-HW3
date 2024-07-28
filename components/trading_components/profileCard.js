@@ -1,5 +1,6 @@
 import { usePageContext } from "@/utils/context"
 import { fetchBalancesForUser } from "@/utils/supabaseService"
+import Image from "next/image"
 import React, { useEffect, useState } from "react"
 
 export default function ProfileCard({ rates }) {
@@ -31,14 +32,15 @@ export default function ProfileCard({ rates }) {
     }
 
     getBalance()
-  }, [state.exchangeMode, state.user])
+  }, [state.exchangeMode, state.user, dispatch])
 
   return (
     <div className="flex justify-between ring rounded-lg ring-gray-300 p-4 rounde-lg">
       <div className="flex justify-start">
-        <img
+        <Image
           src="https://picsum.photos/200"
           className="h-10 w-10 rounded-full"
+          alt="Profile"
         />
         <div className="ml-2 mt-2 font-semibold">
           {state.user} ({state.exchangeMode + " Mode"})

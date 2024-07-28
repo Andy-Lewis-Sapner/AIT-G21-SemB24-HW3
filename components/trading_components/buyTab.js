@@ -5,7 +5,7 @@ import {
 } from "@/utils/supabaseService"
 import { useEffect, useState } from "react"
 import { usePageContext } from "@/utils/context"
-export default function BuyTab({ symbols }) {
+export default function BuyTab({ symbols, rates }) {
   const { state, dispatch } = usePageContext()
   const [symbol, setSymbol] = useState("BTC")
   const [amount, setAmount] = useState(0)
@@ -88,7 +88,7 @@ export default function BuyTab({ symbols }) {
             setBuyingMessage("")
           }}
         />
-        <span className="py-2">{`${calculateTotalCost().toFixed(2)} (${state.preferredCurrency})`}</span>
+        <span className="py-2">{`${(calculateTotalCost() * rates[state.preferredCurrency]).toFixed(2)} (${state.preferredCurrency})`}</span>
         <button
           onClick={handleBuying}
           className="bg-blue-300 hover:bg-blue-400 pb-1 px-3 rounded-2xl"
