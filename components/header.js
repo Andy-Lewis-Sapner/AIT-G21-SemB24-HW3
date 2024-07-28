@@ -7,7 +7,11 @@ export default function Header() {
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const [hiddenClass, setHiddenClass] = useState("")
-  const [darkMode, setDarkMode] = useState(false)
+  const [darkMode, setDarkMode] = useState(
+    () =>
+      typeof document !== "undefined" &&
+      document.documentElement.classList.contains("dark"),
+  )
 
   const handleClick = (text) => {
     if (state.user) router.push("/" + text)
