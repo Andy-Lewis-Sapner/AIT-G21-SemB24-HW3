@@ -1,10 +1,13 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { usePageContext } from "@/utils/context"
+
 export default function Header() {
   const { state, dispatch } = usePageContext()
   const router = useRouter()
+  const [menuOpen, setMenuOpen] = useState(false)
   const [hiddenClass, setHiddenClass] = useState("")
+
   const handleClick = (text) => {
     if (state.user) router.push("/" + text)
     else {
@@ -13,6 +16,7 @@ export default function Header() {
       else router.push("/Login")
     }
   }
+
   useEffect(() => {
     if (state.user) {
       setHiddenClass("hidden")
@@ -21,8 +25,8 @@ export default function Header() {
 
   return (
     <header className="bg-blue-100 dark:bg-blue-900 text-black dark:text-white p-3">
-      <div className="max-w-[1000px] w-full mx-auto flex justify-between">
-        <button onClick={() => handleClick("")}>
+      <div className="max-w-[1000px] w-full mx-auto flex justify-between items-center">
+        <button onClick={() => handleClick("")} className="flex items-center">
           <svg
             fill="#000000"
             width="25px"
@@ -34,11 +38,15 @@ export default function Header() {
             <path d="M0 26.016q0 2.496 1.76 4.224t4.256 1.76h16q2.464 0 4.224-1.76t1.76-4.224v-4h2.016q0.8 0 1.408-0.576t0.576-1.44v-8q0-0.832-0.576-1.408t-1.408-0.576h-2.016v-4q0-2.496-1.76-4.256t-4.224-1.76h-16q-2.496 0-4.256 1.76t-1.76 4.256v20zM4 26.016v-20q0-0.832 0.576-1.408t1.44-0.608h16q0.8 0 1.408 0.608t0.576 1.408v4h-5.984q-0.832 0-1.44 0.576t-0.576 1.408v8q0 0.832 0.576 1.44t1.44 0.576h1.984v1.984h2.016v-1.984h1.984v4q0 0.832-0.576 1.408t-1.408 0.576h-16q-0.832 0-1.44-0.576t-0.576-1.408zM6.016 24q0 0.832 0.576 1.44t1.408 0.576v-2.016h-1.984zM6.016 22.016h1.984v-2.016h-1.984v2.016zM6.016 18.016h1.984v-2.016h-1.984v2.016zM6.016 14.016h1.984v-2.016h-1.984v2.016zM6.016 10.016h1.984v-2.016h-1.984v2.016zM8 8h2.016v-1.984h-2.016v1.984zM10.016 26.016h1.984v-2.016h-1.984v2.016zM12 8h2.016v-1.984h-2.016v1.984zM14.016 26.016h1.984v-2.016h-1.984v2.016zM16 8h2.016v-1.984h-2.016v1.984zM18.016 26.016h1.984v-2.016h-1.984v2.016zM18.016 20v-8h12v8h-12zM20 16q0 0.832 0.576 1.44t1.44 0.576 1.408-0.576 0.576-1.44-0.576-1.408-1.408-0.576-1.44 0.576-0.576 1.408zM20 8h2.016q0-0.832-0.608-1.408t-1.408-0.576v1.984z"></path>
           </svg>
         </button>
-        <button className="block sm:hidden">
+        <button
+          className="block sm:hidden"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="1.5em"
             viewBox="0 0 448 512"
+            className={menuOpen ? "hidden" : ""}
           >
             <path
               fill="#ffffff"
@@ -46,7 +54,7 @@ export default function Header() {
             />
           </svg>
           <svg
-            className="hidden"
+            className={menuOpen ? "" : "hidden"}
             xmlns="http://www.w3.org/2000/svg"
             height="1.5em"
             viewBox="0 0 384 512"
@@ -58,7 +66,7 @@ export default function Header() {
           </svg>
         </button>
         <div
-          className="absolute top-[56px] left-0 bg-blue-300 p-3 hidden w-full"
+          className={`absolute top-[56px] left-0 bg-blue-300 p-3 w-full ${menuOpen ? "block" : "hidden"}`}
           id="ddMenu"
         >
           <button
@@ -79,8 +87,34 @@ export default function Header() {
           >
             Tutorial
           </button>
+          <div className="mt-4">
+            <button
+              className={`block text-left bg-blue-200 hover:bg-blue-300 active:bg-blue-400 rounded-lg py-1 px-2 mb-2 ${hiddenClass}`}
+              onClick={() => handleClick("Login")}
+            >
+              Login
+            </button>
+            <button
+              className={`block text-left bg-blue-200 hover:bg-blue-300 active:bg-blue-400 rounded-lg py-1 px-2 mb-2 ${hiddenClass}`}
+              onClick={() => handleClick("Register")}
+            >
+              Register
+            </button>
+            <button
+              className={`block w-full text-left bg-blue-200 hover:bg-blue-300 active:bg-blue-400 rounded-lg py-1 px-2 ${hiddenClass === "hidden" ? "" : "hidden"}`}
+              onClick={() => {
+                dispatch({ type: "SET_USER", payload: undefined })
+                dispatch({ type: "SET_USER_BALANCE", payload: undefined })
+                dispatch({ type: "SET_USER_COMPETITIONS", payload: undefined })
+                dispatch({ type: "SET_EXCHANGE_MODE", payload: "Regular" })
+                router.push("/")
+              }}
+            >
+              Log Out
+            </button>
+          </div>
         </div>
-        <div className="justify-start gap-2 hidden sm:flex">
+        <div className="hidden sm:flex justify-start gap-2">
           <button
             className="hover:bg-blue-200 rounded-lg px-2"
             onClick={() => handleClick("Trading")}
@@ -100,30 +134,21 @@ export default function Header() {
             Tutorial
           </button>
         </div>
-        <div className="justify-end gap-4 hidden sm:flex">
+        <div className="hidden sm:flex justify-end gap-4">
           <button
-            className={
-              "bg-blue-200 hover:bg-blue-300 active:bg-blue-400 rounded-lg py-1 px-2 " +
-              hiddenClass
-            }
+            className={`bg-blue-200 hover:bg-blue-300 active:bg-blue-400 rounded-lg py-1 px-2 ${hiddenClass}`}
             onClick={() => handleClick("Login")}
           >
             Login
           </button>
           <button
-            className={
-              "bg-blue-200 hover:bg-blue-300 active:bg-blue-400 rounded-lg py-1 px-2 " +
-              hiddenClass
-            }
+            className={`bg-blue-200 hover:bg-blue-300 active:bg-blue-400 rounded-lg py-1 px-2 ${hiddenClass}`}
             onClick={() => handleClick("Register")}
           >
             Register
           </button>
           <button
-            className={
-              "bg-blue-200 hover:bg-blue-300 active:bg-blue-400 rounded-lg py-1 px-2 " +
-              (hiddenClass === "hidden" ? "" : "hidden")
-            }
+            className={`bg-blue-200 hover:bg-blue-300 active:bg-blue-400 rounded-lg py-1 px-2 ${hiddenClass === "hidden" ? "" : "hidden"}`}
             onClick={() => {
               dispatch({ type: "SET_USER", payload: undefined })
               dispatch({ type: "SET_USER_BALANCE", payload: undefined })

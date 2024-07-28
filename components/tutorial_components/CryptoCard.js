@@ -9,6 +9,8 @@ const CryptoCard = ({ crypto }) => {
       <Image
         src={crypto.image}
         alt={crypto.name}
+        width={48}
+        height={48}
         className="w-12 h-12 rounded-md mr-4 mt-1"
       />
       <div>
