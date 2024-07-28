@@ -38,7 +38,7 @@ export default function ProfileCard({ rates }) {
     <div className="flex justify-between ring rounded-lg ring-gray-300 p-4 rounde-lg">
       <div className="flex justify-start">
         <Image
-          src="https://picsum.photos/200"
+          src="https://picsum.photos/40"
           className="h-10 w-10 rounded-full"
           alt="Profile"
         />

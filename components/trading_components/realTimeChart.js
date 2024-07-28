@@ -126,7 +126,7 @@ export default function RealTimeChart({ rates, symbols }) {
         socketRef.current.close()
       }
     }
-  }, [state.chosenCrypto, updateChartData])
+  }, [state.chosenCrypto])
 
   useEffect(() => {
     if (chartInstance.current) {

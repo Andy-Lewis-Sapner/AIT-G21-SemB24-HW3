@@ -39,7 +39,8 @@ export default function BuyTab({ symbols, rates }) {
         return
       } else {
         const newUsdAmount = res["USD"] - totalCost
-        const newSymbolAmount = (res[symbol] || 0) + parseFloat(amount)
+        const newSymbolAmount =
+          (res[symbol] || 0) + parseFloat(amount) * state.prices[symbol]
         const success = await updateData(
           state.user,
           newUsdAmount,
