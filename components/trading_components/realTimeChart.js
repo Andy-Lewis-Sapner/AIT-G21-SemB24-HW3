@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react"
 import { Chart } from "chart.js/auto"
 import { usePageContext } from "@/utils/context"
+import RealTimeTicker from "./realTimeTicker"
 
-export default function RealTimeChart({ rates }) {
+export default function RealTimeChart({ rates, symbols }) {
   const { state, dispatch } = usePageContext()
-  const [symbols, setSymbols] = useState([])
-  const [selectedSymbol, setSelectedSymbol] = useState("BTC")
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -32,9 +31,6 @@ export default function RealTimeChart({ rates }) {
   }
 
   const updateChartData = (symbol, price) => {
-    const rate = rates[state.preferredCurrency] || 1
-    const convertedPrice = (price * rate).toFixed(2)
-
     setChartData((prevData) => {
       const newData = { ...prevData }
       if (newData.labels.length >= maxPoints) {
@@ -46,21 +42,13 @@ export default function RealTimeChart({ rates }) {
           .concat(new Array(15).fill(null))
       }
       newData.labels.push(formatTime(Date.now()))
-      newData.datasets[0].data.push(price)
+      const rate = rates[state.preferredCurrency] || 1
+      newData.datasets[0].data.push(price * rate)
       return newData
     })
   }
 
   useEffect(() => {
-    const fetchSymbols = async () => {
-      const listURL = "https://api.mtw-testnet.com/assets/symbols"
-      const response = await fetch(listURL)
-      const data = await response.json()
-      setSymbols(data)
-    }
-
-    fetchSymbols()
-
     const ctx = chartRef.current.getContext("2d")
     chartInstance.current = new Chart(ctx, {
       type: "line",
@@ -127,9 +115,9 @@ export default function RealTimeChart({ rates }) {
 
     socketRef.current.onmessage = (event) => {
       const data = JSON.parse(event.data)
-      if (data.hasOwnProperty(selectedSymbol)) {
-        const price = parseFloat(data[selectedSymbol].p)
-        updateChartData(selectedSymbol, price)
+      if (data.hasOwnProperty(state.chosenCrypto)) {
+        const price = parseFloat(data[state.chosenCrypto].p)
+        updateChartData(state.chosenCrypto, price)
       }
     }
 
@@ -138,18 +126,19 @@ export default function RealTimeChart({ rates }) {
         socketRef.current.close()
       }
     }
-  }, [selectedSymbol])
+  }, [state.chosenCrypto])
 
   useEffect(() => {
     if (chartInstance.current) {
       chartInstance.current.data.datasets[0].label = `Price (${state.preferredCurrency})`
-      const newData = chartData.datasets[0].data.map(
-        (price) => price * rates[state.preferredCurrency],
-      )
+      const newData = chartData.datasets[0].data.map((price, index) => {
+        const originalPrice = price / rates[state.preferredCurrency]
+        return originalPrice * rates[state.preferredCurrency]
+      })
       chartInstance.current.data.datasets[0].data = newData
       chartInstance.current.update()
     }
-  }, [state.preferredCurrency])
+  }, [state.preferredCurrency, rates])
 
   useEffect(() => {
     if (chartInstance.current) {
@@ -159,7 +148,7 @@ export default function RealTimeChart({ rates }) {
   }, [chartData])
 
   const handleChangeSymbol = (event) => {
-    setSelectedSymbol(event.target.value)
+    dispatch({ type: "SET_CHOSEN_CRYPTO", payload: event.target.value })
     setChartData({
       labels: [],
       datasets: [
@@ -175,26 +164,24 @@ export default function RealTimeChart({ rates }) {
   }
 
   return (
-    <div className="mr-1 w-full ring ring-gray-300 p-4 rounded-lg dark:bg-slate-300">
-      <div className="max-w-[560px] mt-4 mx-auto pb-10">
-        <div className="text-4xl py-6 text-center">Real time chart</div>
-        <div className="flex justify-center gap-4 font-bold pb-2">
-          <div className="py-1">Symbol</div>
-          <select
-            onChange={handleChangeSymbol}
-            className="border border-gray-300 rounded-md w-[100px] px-2 py-1 dark:bg-gray-800 dark:text-white"
-            value={selectedSymbol}
-          >
-            {symbols.map((symbol) => (
-              <option key={symbol} value={symbol}>
-                {symbol}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="w-[100%] h-[300px]">
-          <canvas ref={chartRef}></canvas>
-        </div>
+    <div className="max-w-[300px] mt-4 mx-auto pb-10">
+      <div className="flex justify-center gap-4 font-semibold pb-2">
+        <div className="py-1">Symbol</div>
+        <select
+          onChange={handleChangeSymbol}
+          className="border border-gray-300 rounded-md w-[100px] px-2 py-1 dark:bg-gray-800 dark:text-white"
+          value={state.chosenCrypto}
+        >
+          {symbols.map((symbol) => (
+            <option key={symbol} value={symbol}>
+              {symbol}
+            </option>
+          ))}
+        </select>
+      </div>
+      <RealTimeTicker rates={rates} symbols={symbols} />
+      <div className="w-[100%] h-[300px]">
+        <canvas ref={chartRef}></canvas>
       </div>
     </div>
   )

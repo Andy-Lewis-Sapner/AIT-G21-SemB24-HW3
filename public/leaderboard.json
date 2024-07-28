@@ -1,0 +1,27 @@
+[
+    {
+      "id": 1,
+      "name": "User1",
+      "score": 1000
+    },
+    {
+      "id": 2,
+      "name": "User2",
+      "score": 950
+    },
+    {
+      "id": 3,
+      "name": "User3",
+      "score": 900
+    },
+    {
+      "id": 4,
+      "name": "User4",
+      "score": 850
+    },
+    {
+      "id": 5,
+      "name": "User5",
+      "score": 800
+    }
+  ]

@@ -1,19 +1,37 @@
 import { usePageContext } from "@/utils/context"
-import React, { useState } from "react"
+import { fetchBalancesForUser } from "@/utils/supabaseService"
+import React, { useEffect, useState } from "react"
 
 export default function ProfileCard({ rates }) {
   const { state, dispatch } = usePageContext()
-  const [modeButton, setModeButton] = useState("Competition Mode")
+  const [modeButton, setModeButton] = useState("Competition")
+  const [hiddenClass, setHiddenClass] = useState("")
 
   const changeModeButton = () => {
     setModeButton((prevMode) =>
-      prevMode === "Competition Mode" ? "Regular Mode" : "Competition Mode",
+      prevMode === "Competition" ? "Regular" : "Competition",
     )
+    dispatch({ type: "SET_EXCHANGE_MODE", payload: modeButton })
   }
 
   const handleSelectChange = (e) => {
     dispatch({ type: "SET_PREFERED_CURRENCY", payload: e.target.value })
   }
+
+  useEffect(() => {
+    const getBalance = async () => {
+      const data = await fetchBalancesForUser(state.user)
+      console.log(data)
+      if (Object.keys(data).length > 0) {
+        dispatch({ type: "SET_BALANCE", payload: data[0].balance })
+        setHiddenClass("")
+      } else {
+        setHiddenClass("hidden")
+      }
+    }
+
+    getBalance()
+  }, [state.exchangeMode, state.user])
 
   return (
     <div className="flex justify-between ring rounded-lg ring-gray-300 p-4 rounde-lg">
@@ -22,11 +40,16 @@ export default function ProfileCard({ rates }) {
           src="https://picsum.photos/200"
           className="h-10 w-10 rounded-full"
         />
-        <div className="ml-2 mt-2 font-semibold">Name ({modeButton})</div>
+        <div className="ml-2 mt-2 font-semibold">
+          {state.user} ({state.exchangeMode + " Mode"})
+        </div>
       </div>
       <div className="flex flex-row gap-4">
-        <button className="text-blue-500" onClick={changeModeButton}>
-          {"Switch to " + modeButton}
+        <button
+          className={"text-blue-500 " + hiddenClass}
+          onClick={changeModeButton}
+        >
+          {"Switch to " + modeButton + " Mode"}
         </button>
         <select
           className="rounded-lg"

@@ -1,5 +1,7 @@
 export default function Footer() {
   return (
-    <div className="bg-blue-100 dark:bg-blue-900 text-black dark:text-white p-4 flex justify-between"></div>
-  );
+    <footer className="bg-blue-100 dark:bg-blue-900 text-black text-center dark:text-white p-4">
+      <p>&copy; 2024 Crypto Trading. All rights reserved.</p>
+    </footer>
+  )
 }

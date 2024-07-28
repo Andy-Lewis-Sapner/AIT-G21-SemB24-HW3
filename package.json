@@ -10,11 +10,14 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.44.4",
+    "axios": "^1.7.2",
     "chart.js": "^4.4.3",
-    "next": "14.2.5",
+    "mini-css-extract-plugin": "^2.9.0",
+    "next": "^14.2.5",
     "react": "^18",
     "react-dom": "^18",
-    "react-tabs": "^6.0.2"
+    "react-icons": "^5.2.1",
+    "webpack": "^5.93.0"
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
