@@ -16,7 +16,7 @@ export default function CryptoFactsAndJokes() {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg flex flex-col items-center">
+    <div className="rounded-lg flex flex-col items-center bg-inherit">
       <h1 className="text-2xl font-semibold mb-2">Cryptocurrency Fun Facts</h1>
       {factOrJoke && (
         <p className="border border-gray-500 rounded-md p-1 mb-2">

@@ -52,7 +52,7 @@ export default function RealTimeTicker({ rates, symbols }) {
       )
 
       setPrice(
-        <div className="border border-silver p-4 text-center rounded-md">
+        <div className="border border-gray-400 p-4 text-center rounded-md">
           {p}
           {change}
         </div>,

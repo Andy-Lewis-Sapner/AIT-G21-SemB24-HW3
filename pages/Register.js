@@ -77,20 +77,20 @@ export default function Register() {
   return (
     <div>
       <Meta title="Register" />
-      <div className="w-full m-auto py-32 bg-slate-50 h-full">
-        <h1 className="text-4xl text-center font-bold text-slate-800 mb-4 pt-4">
+      <div className="w-full m-auto py-32 bg-slate-50 dark:bg-gray-800 h-full">
+        <h1 className="text-4xl text-center font-bold text-slate-800 dark:text-gray-100 mb-4 pt-4">
           Register
         </h1>
         <form className="w-1/2 mx-auto flex flex-col justify-between max-w-[500px]">
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
               htmlFor="username"
             >
               Username
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-900 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
               id="username"
               type="text"
               placeholder="Username"
@@ -100,13 +100,13 @@ export default function Register() {
           </div>
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
               htmlFor="password"
             >
               Password
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-900 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
               id="password"
               type="password"
               placeholder="Password"
@@ -114,20 +114,20 @@ export default function Register() {
               onChange={handlePasswordChange}
             />
             {passwordMessage && (
-              <p className="text-red-500 text-xs italic pt-1">
+              <p className="text-red-500 dark:text-red-400 text-xs italic pt-1">
                 {passwordMessage}
               </p>
             )}
           </div>
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
               htmlFor="confirmPassword"
             >
               Confirm Password
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-900 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
               id="confirmPassword"
               type="password"
               placeholder="Confirm Password"
@@ -135,20 +135,20 @@ export default function Register() {
               onChange={handleConfirmPasswordChange}
             />
             {confirmPasswordMessage && (
-              <p className="text-red-500 text-xs italic pt-1">
+              <p className="text-red-500 dark:text-red-400 text-xs italic pt-1">
                 {confirmPasswordMessage}
               </p>
             )}
           </div>
           <div className="flex flex-col items-center justify-center pt-2">
-            <p className="mb-3">
+            <p className="mb-3 dark:text-gray-300">
               Already have an account? Press here to{" "}
-              <Link href="/Login" className="text-blue-500">
+              <Link href="/Login" className="text-blue-500 dark:text-blue-300">
                 Login
               </Link>
             </p>
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
               onClick={handleRegisterPressed}
             >

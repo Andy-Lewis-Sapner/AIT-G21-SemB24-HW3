@@ -25,8 +25,8 @@ export default function Deposit() {
   return (
     <div>
       <Meta title="Deposit" />
-      <div className="w-full m-auto py-32 bg-slate-50 h-full">
-        <h1 className="text-4xl text-center font-bold text-slate-800 mb-4 pt-4">
+      <div className="w-full m-auto py-32 bg-slate-50 dark:bg-gray-800 h-full">
+        <h1 className="text-4xl text-center font-bold text-slate-800 dark:text-gray-200 mb-4 pt-4">
           Deposit
         </h1>
         <form
@@ -35,13 +35,13 @@ export default function Deposit() {
         >
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
               htmlFor="amount"
             >
               Amount
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
               id="amount"
               type="text"
               placeholder="Amount"
@@ -51,13 +51,13 @@ export default function Deposit() {
           </div>
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
               htmlFor="cardNumber"
             >
               Card Number
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
               id="cardNumber"
               type="text"
               placeholder="Card Number"
@@ -66,13 +66,13 @@ export default function Deposit() {
           </div>
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
               htmlFor="expiryDate"
             >
               Expiry Date
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
               id="expiryDate"
               type="text"
               placeholder="MM/YY"
@@ -81,13 +81,13 @@ export default function Deposit() {
           </div>
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
               htmlFor="cvv"
             >
               CVV
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
               id="cvv"
               type="text"
               placeholder="CVV"
@@ -95,9 +95,11 @@ export default function Deposit() {
             />
           </div>
           <div className="flex flex-col items-center justify-center pt-2">
-            <p className="text-green-500 mb-3">{userMessage}</p>
+            <p className="text-green-500 dark:text-green-400 mb-3">
+              {userMessage}
+            </p>
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
               Deposit

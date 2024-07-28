@@ -82,19 +82,21 @@ const Tutorials = () => {
   // Main content rendering
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-4xl font-bold mb-4">
+      <h1 className="text-4xl font-bold mb-4 dark:text-gray-200">
         Learn and Earn with Cryptocurrency
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="col-span-2">
-          <h2 className="text-3xl font-bold mb-4">
+          <h2 className="text-3xl font-bold mb-4 dark:text-gray-200">
             Cryptocurrency Explanations
           </h2>
           {/* Rendering the list of cryptocurrency cards */}
           <CryptoList cryptos={cryptos} />
         </div>
         <div>
-          <h2 className="text-3xl font-bold mb-4">Tutorial Videos</h2>
+          <h2 className="text-3xl font-bold mb-4 dark:text-gray-200">
+            Tutorial Videos
+          </h2>
           {/* Rendering the list of video cards */}
           <VideoList videos={tutorialVideos} />
         </div>

@@ -35,7 +35,7 @@ export default function ProfileCard({ rates }) {
   }, [state.exchangeMode, state.user, dispatch])
 
   return (
-    <div className="flex justify-between ring rounded-lg ring-gray-300 p-4 rounde-lg">
+    <div className="flex justify-between ring rounded-lg ring-gray-300 p-4 rounde-lg dark:bg-slate-300 dark:ring-gray-600">
       <div className="flex justify-start">
         <Image
           src="https://picsum.photos/40"
@@ -56,7 +56,7 @@ export default function ProfileCard({ rates }) {
           {"Switch to " + modeButton + " Mode"}
         </button>
         <select
-          className="rounded-lg"
+          className="rounded-lg bg-inherit"
           onChange={handleSelectChange}
           value={state.preferedCurrency}
         >

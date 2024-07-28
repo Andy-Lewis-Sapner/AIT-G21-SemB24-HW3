@@ -134,45 +134,55 @@ const Competition = () => {
 
       <main className="container mx-auto py-20">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-4xl font-bold">Leaderboard</h2>
-          <div className="text-lg">Time Left: {formatTime(timeLeft)}</div>
+          <h2 className="text-4xl font-bold dark:text-white">Leaderboard</h2>
+          <div className="text-lg dark:text-gray-300">
+            Time Left: {formatTime(timeLeft)}
+          </div>
         </div>
         {loading ? (
-          <p>Loading...</p>
+          <p className="dark:text-gray-300">Loading...</p>
         ) : error ? (
-          <p>Error: {error}</p>
+          <p className="dark:text-red-500">Error: {error}</p>
         ) : (
-          <table className="min-w-full bg-white">
+          <table className="min-w-full bg-white dark:bg-gray-800 dark:border dark:border-gray-700">
             <thead>
               <tr>
-                <th className="py-2">Username</th>
-                <th className="py-2">Balance</th>
+                <th className="py-2 dark:text-white">Username</th>
+                <th className="py-2 dark:text-white">Balance</th>
               </tr>
             </thead>
             <tbody>
               {participants.map((participant, index) => (
                 <tr
                   key={participant.id}
-                  className={index % 2 === 0 ? "bg-gray-100" : ""}
+                  className={
+                    index % 2 === 0
+                      ? "bg-gray-100 dark:bg-gray-700"
+                      : "dark:bg-gray-800"
+                  }
                 >
-                  <td className="py-2 text-center">{participant.user_name}</td>
-                  <td className="py-2 text-center">{participant.balance}</td>
+                  <td className="py-2 text-center dark:text-gray-300">
+                    {participant.user_name}
+                  </td>
+                  <td className="py-2 text-center dark:text-gray-300">
+                    {participant.balance}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
 
-        <h2 className="text-4xl font-bold mt-10 mb-6 text-center">
+        <h2 className="text-4xl font-bold mt-10 mb-6 text-center dark:text-white">
           Register for Competition
         </h2>
         <form
           onSubmit={handleRegister}
-          className="bg-white p-6 rounded-lg shadow-md mx-auto max-w-md"
+          className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mx-auto max-w-md"
         >
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
               htmlFor="username"
             >
               Username
@@ -182,20 +192,22 @@ const Competition = () => {
               type="text"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-900 dark:border-gray-700"
               required
             />
           </div>
           <button
             type="submit"
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg w-full"
+            className="bg-blue-600 text-white dark:bg-blue-500 dark:text-white px-6 py-3 rounded-lg text-lg w-full"
             disabled={loading}
           >
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
         {success && (
-          <p className="text-green-500 text-center mt-4">{success}</p>
+          <p className="text-green-500 dark:text-green-400 text-center mt-4">
+            {success}
+          </p>
         )}
       </main>
     </div>

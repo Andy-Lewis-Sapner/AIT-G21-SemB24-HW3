@@ -2,7 +2,7 @@
 const VideoCard = ({ video }) => {
   return (
     // Container for each video card with styling
-    <div className="bg-white p-6 rounded-lg shadow-md">
+    <div className="bg-white dark:bg-gray-300 p-6 rounded-lg shadow-md">
       {/* Displaying video title */}
       <h2 className="text-2xl font-bold mb-2">{video.title}</h2>
       {/* Container for embedded video with aspect ratio */}

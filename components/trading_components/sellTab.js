@@ -69,7 +69,7 @@ export default function SellTab({ symbols, rates }) {
     <div>
       <select
         defaultValue="currency"
-        className="w-10/12 rounded-lg mb-2 dark:bg-slate-300"
+        className="w-10/12 rounded-lg mb-2 bg-inherit"
         onChange={handleSelectChange}
       >
         <option value="currency" disabled>
@@ -86,7 +86,7 @@ export default function SellTab({ symbols, rates }) {
           type="text"
           placeholder="Amount"
           value={amount}
-          className="rounded-lg dark:bg-slate-300 w-32"
+          className="rounded-lg bg-inherit w-32"
           onChange={(e) => {
             setAmount(e.target.value)
             setSellingMessage("")

@@ -64,21 +64,27 @@ export default function Trading({ rates, symbols }) {
         <ProfileCard rates={rates} />
         <div className="flex flex-col md:flex-row justify-between mt-4">
           <div className="w-full md:w-1/2 flex flex-col justify-between mb-4 md:mb-0">
-            <div className="md:mr-3 h-full ring ring-gray-300 p-4 rounded-lg dark:bg-slate-300">
-              <h6 className="text-2xl font-semibold">Balances</h6>
+            <div className="md:mr-3 h-full ring ring-gray-300 p-4 rounded-lg dark:bg-slate-300 dark:ring-gray-600">
+              <h6 className="text-2xl font-semibold dark:text-slate-900">
+                Balances
+              </h6>
               <Balance rates={rates} symbols={symbols} />
             </div>
-            <div className="md:mr-3 mt-3 ring ring-gray-300 p-4 rounded-lg dark:bg-slate-300">
+            <div className="md:mr-3 mt-3 ring ring-gray-300 p-4 rounded-lg dark:bg-slate-300 dark:ring-gray-600">
               <CryptoFactsAndJokes />
             </div>
           </div>
           <div className="w-full md:w-1/2 flex flex-col justify-between">
-            <div className="w-full mb-2 md:mb-4 ring ring-gray-300 p-4 rounded-lg dark:bg-slate-300">
-              <div className="text-2xl font-semibold">Real Time Data</div>
+            <div className="w-full mb-2 md:mb-4 ring ring-gray-300 p-4 rounded-lg dark:bg-slate-300 dark:ring-gray-600">
+              <div className="text-2xl font-semibold dark:text-slate-900">
+                Real Time Data
+              </div>
               <RealTimeChart rates={rates} symbols={symbols} />
             </div>
-            <div className="w-full mt-1 md:mt-0 ring ring-gray-300 p-4 rounded-lg dark:bg-slate-300">
-              <h6 className="text-xl font-semibold mb-2">Buy and Sell</h6>
+            <div className="w-full mt-1 md:mt-0 ring ring-gray-300 p-4 rounded-lg dark:bg-slate-300 dark:ring-gray-600">
+              <h6 className="text-xl font-semibold mb-2 dark:text-slate-900">
+                Buy and Sell
+              </h6>
               <Tabs tabs={tabs} />
             </div>
           </div>

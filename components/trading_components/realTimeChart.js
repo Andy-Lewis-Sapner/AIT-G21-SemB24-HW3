@@ -169,7 +169,7 @@ export default function RealTimeChart({ rates, symbols }) {
         <div className="py-1">Symbol</div>
         <select
           onChange={handleChangeSymbol}
-          className="border border-gray-300 rounded-md w-[100px] px-2 py-1 dark:bg-gray-800 dark:text-white"
+          className="border border-gray-500 rounded-md w-[100px] px-2 py-1 bg-inherit"
           value={state.chosenCrypto}
         >
           {symbols.map((symbol) => (

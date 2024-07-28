@@ -4,7 +4,7 @@ import Image from "next/image"
 const CryptoCard = ({ crypto }) => {
   return (
     // Container for each crypto card with styling
-    <div className="bg-white p-6 rounded-lg shadow-md flex items-start">
+    <div className="bg-white dark:bg-gray-300 p-6 rounded-lg shadow-md flex items-start">
       {/* Displaying crypto image */}
       <Image
         src={crypto.image}
