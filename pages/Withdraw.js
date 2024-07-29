@@ -30,7 +30,7 @@ export default function Withdraw() {
   return (
     <div>
       <Meta title="Withdraw" />
-      <div className="w-full m-auto py-32 bg-slate-50 dark:bg-gray-800 h-full">
+      <div className="w-full m-auto py-32 h-full">
         <h1 className="text-4xl text-center font-bold text-slate-800 dark:text-gray-200 mb-4 pt-4">
           Withdraw
         </h1>
