@@ -21,9 +21,9 @@ export default function Home() {
   })
 
   return (
-    <div className="min-h-screen flex flex-col dark:bg-gray-900 dark:text-white">
+    <div className="flex flex-col dark:bg-gray-900 dark:text-white">
       <Meta title="Home" />
-      <main className="flex-grow container mx-auto mt-10 p-6">
+      <main className="container mx-auto my-10 p-6">
         <section className="text-center py-20">
           <h2 className="text-5xl font-bold mb-6 dark:text-gray-100">
             Welcome to Crypto World
