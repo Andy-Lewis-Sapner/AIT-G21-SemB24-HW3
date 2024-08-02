@@ -17,7 +17,13 @@ export default function Withdraw() {
     if (amount > user.USD) {
       setUserMessage("Insufficient balance")
     } else {
-      const withdraw = await updateData(state.user, user.USD - amount, null, 0)
+      const withdraw = await updateData(
+        state.user,
+        user.USD - amount,
+        null,
+        0,
+        state.exchangeMode === "Competition" ? "Balances" : "Users",
+      )
       if (withdraw) {
         setUserMessage("Withdrawal successful")
         router.push("/Trading")

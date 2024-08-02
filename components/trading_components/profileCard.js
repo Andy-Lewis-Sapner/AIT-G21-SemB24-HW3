@@ -5,7 +5,9 @@ import React, { useEffect, useState } from "react"
 
 export default function ProfileCard({ rates }) {
   const { state, dispatch } = usePageContext()
-  const [modeButton, setModeButton] = useState("Competition")
+  const [modeButton, setModeButton] = useState(
+    state.exchangeMode === "Competition" ? "Regular" : "Competition",
+  )
   const [hiddenClass, setHiddenClass] = useState("")
 
   const changeModeButton = () => {
@@ -24,7 +26,7 @@ export default function ProfileCard({ rates }) {
       const data = await fetchBalancesForUser(state.user)
       console.log(data)
       if (Object.keys(data).length > 0) {
-        dispatch({ type: "SET_BALANCE", payload: data[0].balance })
+        dispatch({ type: "SET_BALANCE", payload: data.USD })
         setHiddenClass("")
       } else {
         setHiddenClass("hidden")

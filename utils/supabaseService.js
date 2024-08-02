@@ -24,7 +24,8 @@ export const fetchBalancesForUser = async (username) => {
   const { data, error } = await supabase
     .from("Balances")
     .select("*")
-    .eq("user_name", username)
+    .eq("username", username)
+    .single()
 
   if (error) {
     console.error("Error fetching data:", error)
@@ -81,17 +82,23 @@ export const insertNewUser = async (id, username, password) => {
   return data
 }
 
-export const updateData = async (username, newUsdAmount, symbol, newAmount) => {
+export const updateData = async (
+  username,
+  newUsdAmount,
+  symbol,
+  newAmount,
+  table,
+) => {
   let updateError = null
   if (symbol) {
     const { error } = await supabase
-      .from("Users")
+      .from(table)
       .update({ USD: newUsdAmount, [symbol]: newAmount })
       .eq("username", username)
     updateError = error
   } else {
     const { error } = await supabase
-      .from("Users")
+      .from(table)
       .update({ USD: newUsdAmount })
       .eq("username", username)
     updateError = error
@@ -102,6 +109,16 @@ export const updateData = async (username, newUsdAmount, symbol, newAmount) => {
     return false
   }
   return true
+}
+
+export const fetchCompetitions = async () => {
+  const { data, error } = await supabase.from("Competitions").select("*")
+
+  if (error) {
+    console.error("Error fetching data:", error)
+    return []
+  }
+  return data
 }
 
 export const upsertData = async (username, usdAmount) => {

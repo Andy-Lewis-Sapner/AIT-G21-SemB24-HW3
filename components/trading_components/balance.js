@@ -24,7 +24,6 @@ export default function Balance({ rates, symbols }) {
     let res
     if (state.exchangeMode === "Competition") {
       res = await fetchBalancesForUser(state.user)
-      res = res[0]
     } else {
       res = await fetchUser(state.user)
     }
@@ -32,7 +31,7 @@ export default function Balance({ rates, symbols }) {
       if (symbols.includes(key)) {
         acc[key] = value
       }
-      if (key === "USD" || key === "balance") {
+      if (key === "USD") {
         setBalance(value)
       }
       return acc
@@ -56,7 +55,10 @@ export default function Balance({ rates, symbols }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-inherit">
           {holdings &&
             Object.entries(holdings).map(([crypto, amount]) => {
-              const value = amount.toFixed(2) * rates[state.preferredCurrency]
+              const value =
+                amount.toFixed(2) *
+                state.prices[crypto] *
+                rates[state.preferredCurrency]
               return (
                 <div
                   key={crypto}
@@ -64,6 +66,7 @@ export default function Balance({ rates, symbols }) {
                 >
                   <h4 className="text-lg font-medium">{crypto}</h4>
                   <p className="text-gray-600 dark:text-gray-100">
+                    Amount: {amount.toFixed(2) + "\n"}
                     Value:{" "}
                     {`${value.toFixed(2)}${currencies[state.preferredCurrency]}`}
                   </p>

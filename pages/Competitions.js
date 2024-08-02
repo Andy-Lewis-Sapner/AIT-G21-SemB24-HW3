@@ -1,23 +1,49 @@
 import React, { useEffect, useState } from "react"
 import supabase from "@/utils/supabaseClient"
 import Meta from "@/components/Meta"
+import { fetchCompetitions } from "@/utils/supabaseService"
+import { usePageContext } from "@/utils/context"
 
 const Competition = () => {
+  const { state, dispatch } = usePageContext()
   const [participants, setParticipants] = useState([])
   const [userName, setUserName] = useState("")
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null) // New state for success message
-  const [timeLeft, setTimeLeft] = useState(10) // New state for countdown timer (10 hours in seconds)
+  const [timeLeft, setTimeLeft] = useState(null) // New state for countdown timer (10 hours in seconds)
+
+  useEffect(() => {
+    const getCompetition = async () => {
+      const competitionsDates = await fetchCompetitions()
+      console.log(competitionsDates)
+      if (competitionsDates.length === 0) return
+      let currentCompetitionEndTime
+      const now = new Date()
+      competitionsDates.forEach((competition) => {
+        if (
+          new Date(competition.endDate) > now &&
+          new Date(competition.startDate) < now
+        ) {
+          currentCompetitionEndTime = new Date(competition.endDate)
+        }
+      })
+
+      const timeLeft = (currentCompetitionEndTime - now) / 1000
+      setTimeLeft(timeLeft)
+    }
+
+    getCompetition()
+  }, [])
 
   useEffect(() => {
     fetchParticipants()
 
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          resetCompetition()
-          return 36000
+        if (prevTime <= 0) {
+          clearInterval(timer)
+          return 0
         }
         return prevTime - 1
       })
@@ -30,7 +56,7 @@ const Competition = () => {
     const { data, error } = await supabase
       .from("Balances")
       .select("*")
-      .order("balance", { ascending: false })
+      .order("USD", { ascending: false })
       .limit(10)
 
     if (error) {
@@ -51,7 +77,7 @@ const Competition = () => {
     const { data: existingUser, error: existingError } = await supabase
       .from("Balances")
       .select("*")
-      .eq("user_name", userName)
+      .eq("username", userName)
 
     if (existingError) {
       setError(existingError.message)
@@ -77,6 +103,12 @@ const Competition = () => {
       return
     }
 
+    if (user !== state.user) {
+      setError("Can't register other users.")
+      setLoading(false)
+      return
+    }
+
     if (user.USD < 200) {
       setError("Insufficient balance to register for the competition.")
       setLoading(false)
@@ -98,7 +130,7 @@ const Competition = () => {
 
     const { error } = await supabase
       .from("Balances")
-      .insert([{ user_name: userName, balance: 200, type: 1 }])
+      .insert([{ username: userName, USD: 200 }])
 
     if (error) {
       setError(error.message)
@@ -125,7 +157,7 @@ const Competition = () => {
     const hrs = Math.floor(seconds / 3600)
     const mins = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60
-    return `${hrs.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+    return `${hrs.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toFixed(0).toString().padStart(2, "0")}`
   }
 
   return (
@@ -162,10 +194,10 @@ const Competition = () => {
                   }
                 >
                   <td className="py-2 text-center dark:text-gray-300">
-                    {participant.user_name}
+                    {participant.username}
                   </td>
                   <td className="py-2 text-center dark:text-gray-300">
-                    {participant.balance}
+                    {participant.USD}
                   </td>
                 </tr>
               ))}

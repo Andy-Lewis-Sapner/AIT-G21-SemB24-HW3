@@ -18,6 +18,7 @@ export default function Deposit() {
       user.USD + parseFloat(amount),
       null,
       0,
+      state.exchangeMode === "Competition" ? "Balances" : "Users",
     )
     if (deposit) router.push("/Trading")
   }

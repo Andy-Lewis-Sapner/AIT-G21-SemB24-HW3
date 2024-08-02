@@ -29,7 +29,6 @@ export default function BuyTab({ symbols, rates }) {
       let res
       if (state.exchangeMode === "Competition") {
         res = await fetchBalancesForUser(state.user)
-        res = res[0]
       } else {
         res = await fetchUser(state.user)
       }
@@ -39,20 +38,22 @@ export default function BuyTab({ symbols, rates }) {
         return
       } else {
         const newUsdAmount = res["USD"] - totalCost
-        const newSymbolAmount =
-          (res[symbol] || 0) + parseFloat(amount) * state.prices[symbol]
+        const newSymbolAmount = (res[symbol] || 0) + parseFloat(amount)
         const success = await updateData(
           state.user,
           newUsdAmount,
           symbol,
           newSymbolAmount,
+          state.exchangeMode === "Regular" ? "Users" : "Balances",
         )
         if (!success) {
           alert("Error updating data. Please try again.")
           return
         }
         setAmount("")
-        setBuyingMessage(`Bought ${amount} ${symbol} for ${totalCost} USD`)
+        setBuyingMessage(
+          `Bought ${amount} ${symbol} for ${totalCost.toFixed(2)} USD`,
+        )
         dispatch({
           type: "SET_USER_BALANCE",
           payload: { ...state.user_balance, [symbol]: newSymbolAmount },

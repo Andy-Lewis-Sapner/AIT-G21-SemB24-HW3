@@ -30,7 +30,6 @@ export default function SellTab({ symbols, rates }) {
       let res
       if (state.exchangeMode === "Competition") {
         res = await fetchBalancesForUser(state.user)
-        res = res[0]
       } else {
         res = await fetchUser(state.user)
       }
@@ -42,13 +41,14 @@ export default function SellTab({ symbols, rates }) {
         return
       } else {
         const newUsdAmount = res["USD"] + totalCost
-        const newSymbolAmount = currentSymbolAmount - parseFloat(totalCost)
+        const newSymbolAmount = currentSymbolAmount - amount
 
         const success = await updateData(
           state.user,
           newUsdAmount,
           symbol,
           newSymbolAmount,
+          state.exchangeMode === "Regular" ? "Users" : "Balances",
         )
         if (!success) {
           alert("Error updating data. Please try again.")
