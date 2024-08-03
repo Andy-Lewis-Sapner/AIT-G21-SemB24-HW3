@@ -26,6 +26,10 @@ export default function SellTab({ symbols, rates }) {
 
   const handleSelling = () => {
     setSellingMessage("")
+    if (amount <= 0) {
+      setSellingMessage("Amount must be greater than 0")
+      return
+    }
     const sell = async () => {
       let res
       if (state.exchangeMode === "Competition") {
@@ -55,7 +59,7 @@ export default function SellTab({ symbols, rates }) {
           alert("Error updating data. Please try again.")
           return
         }
-        setAmount("")
+        setAmount(0)
         setSellingMessage(`Sold ${amount} ${symbol} for ${totalCost} USD`)
         dispatch({
           type: "SET_USER_BALANCE",

@@ -25,6 +25,10 @@ export default function BuyTab({ symbols, rates }) {
 
   const handleBuying = () => {
     setBuyingMessage("")
+    if (amount <= 0) {
+      setBuyingMessage("Amount must be greater than 0")
+      return
+    }
     const buy = async () => {
       let res
       if (state.exchangeMode === "Competition") {
@@ -50,7 +54,7 @@ export default function BuyTab({ symbols, rates }) {
           alert("Error updating data. Please try again.")
           return
         }
-        setAmount("")
+        setAmount(0)
         setBuyingMessage(
           `Bought ${amount} ${symbol} for ${totalCost.toFixed(2)} USD`,
         )
