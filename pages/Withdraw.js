@@ -12,8 +12,11 @@ export default function Withdraw() {
 
   const handleWithdraw = async (e) => {
     e.preventDefault()
+    if (amount <= 0) {
+      setUserMessage("Amount must be greater than 0")
+      return
+    }
     const user = await fetchUser(state.user)
-
     if (amount > user.USD) {
       setUserMessage("Insufficient balance")
     } else {

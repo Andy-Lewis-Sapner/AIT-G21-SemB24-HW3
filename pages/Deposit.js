@@ -12,6 +12,10 @@ export default function Deposit() {
 
   const handleDeposit = async (e) => {
     e.preventDefault()
+    if (amount <= 0) {
+      setUserMessage("Amount must be greater than 0")
+      return
+    }
     const user = await fetchUser(state.user)
     const deposit = await updateData(
       state.user,
