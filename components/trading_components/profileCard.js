@@ -10,6 +10,10 @@ export default function ProfileCard({ rates }) {
   )
   const [hiddenClass, setHiddenClass] = useState("")
 
+  useEffect(() => {
+    dispatch({ type: "SET_PREFERED_CURRENCY", payload: "USD" })
+  }, [])
+
   const changeModeButton = () => {
     setModeButton((prevMode) =>
       prevMode === "Competition" ? "Regular" : "Competition",
