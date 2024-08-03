@@ -20,6 +20,7 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("")
   const [passwordMessage, setPasswordMessage] = useState("")
   const [confirmPasswordMessage, setConfirmPasswordMessage] = useState("")
+  const [userMessage, setUserMessage] = useState("")
 
   /**
    * Handles the change event of the password input field.
@@ -54,7 +55,10 @@ export default function Register() {
   }
 
   const handleRegisterPressed = (e) => {
-    if (passwordMessage !== "" || confirmPasswordMessage !== "") {
+    setUserMessage("")
+    if (passwordMessage !== "" || confirmPasswordMessage !== "") return
+    if (password !== confirmPassword) {
+      setUserMessage("Passwords do not match")
       return
     }
     setConfirmPasswordMessage("")
@@ -154,6 +158,9 @@ export default function Register() {
             >
               Register
             </button>
+            <p className="text-red-500 dark:text-red-400 text-xs italic pt-1">
+              {userMessage}
+            </p>
           </div>
         </form>
       </div>
