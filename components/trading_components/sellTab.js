@@ -35,8 +35,9 @@ export default function SellTab({ symbols, rates }) {
       }
 
       const currentSymbolAmount = res[symbol] || 0
+      const currentSymbolValue = currentSymbolAmount * state.prices[symbol]
       const totalCost = calculateTotalCost()
-      if (currentSymbolAmount < calculateTotalCost()) {
+      if (currentSymbolValue < calculateTotalCost()) {
         setSellingMessage("Insufficient cryptocurrency balance")
         return
       } else {

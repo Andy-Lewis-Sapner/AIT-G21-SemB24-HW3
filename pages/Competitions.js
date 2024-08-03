@@ -154,10 +154,11 @@ const Competition = () => {
   }
 
   const formatTime = (seconds) => {
-    const hrs = Math.floor(seconds / 3600)
+    const days = Math.floor(seconds / 86400)
+    const hrs = Math.floor(seconds / 3600) - days * 24
     const mins = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60
-    return `${hrs.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toFixed(0).toString().padStart(2, "0")}`
+    return `${days.toString().padStart(1, "0")}:${hrs.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toFixed(0).toString().padStart(2, "0")}`
   }
 
   return (
@@ -197,7 +198,7 @@ const Competition = () => {
                     {participant.username}
                   </td>
                   <td className="py-2 text-center dark:text-gray-300">
-                    {participant.USD}
+                    {participant.USD.toFixed(2) + "$"}
                   </td>
                 </tr>
               ))}

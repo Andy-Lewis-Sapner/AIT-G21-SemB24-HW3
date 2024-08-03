@@ -4,11 +4,12 @@ import { usePageContext } from "@/utils/context"
 import { useRouter } from "next/router"
 
 export default function Balance({ rates, symbols }) {
+  const router = useRouter()
   const { state, dispatch } = usePageContext()
   const [holdings, setHoldings] = useState({})
   const [balance, setBalance] = useState(0)
-  const router = useRouter()
   const [currencies, setCurrencies] = useState({})
+  const [hiddenFunction, setHiddenFunction] = useState("")
 
   useEffect(() => {
     const fetchCurrenciesSymbols = async () => {
@@ -19,6 +20,14 @@ export default function Balance({ rates, symbols }) {
 
     fetchCurrenciesSymbols()
   }, [])
+
+  useEffect(() => {
+    if (state.exchangeMode === "Competition") {
+      setHiddenFunction("hidden")
+    } else {
+      setHiddenFunction("")
+    }
+  }, [state.exchangeMode])
 
   const fetchBalances = async () => {
     let res
@@ -86,13 +95,21 @@ export default function Balance({ rates, symbols }) {
       </div>
       <div className="flex justify-center gap-4 mt-4">
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800"
+          className={
+            "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800" +
+            " " +
+            hiddenFunction
+          }
           onClick={() => router.push("/Deposit")}
         >
           Deposit
         </button>
         <button
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800"
+          className={
+            "bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800" +
+            " " +
+            hiddenFunction
+          }
           onClick={() => router.push("/Withdraw")}
         >
           Withdraw

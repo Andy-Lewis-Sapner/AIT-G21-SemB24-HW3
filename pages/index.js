@@ -49,9 +49,6 @@ export default function Home() {
               Track cryptocurrency prices and trends in real-time with our
               advanced charting tools.
             </p>
-            <button className="bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-              Learn More
-            </button>
           </div>
 
           <div className="bg-white dark:bg-gray-800 p-6 rounded shadow-md text-center">
@@ -62,9 +59,6 @@ export default function Home() {
             <p className="text-gray-700 dark:text-gray-300 mb-4">
               Keep your digital assets safe with our secure wallet solutions.
             </p>
-            <button className="bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-              Learn More
-            </button>
           </div>
 
           <div className="bg-white dark:bg-gray-800 p-6 rounded shadow-md text-center">
@@ -76,9 +70,9 @@ export default function Home() {
               Get assistance any time of the day with our dedicated support
               team.
             </p>
-            <button className="bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-              Contact Us
-            </button>
+            <p className="text-gray-700 dark:text-gray-300 mb-4">
+              Email us at cryptoExchange@example.com
+            </p>
           </div>
         </section>
       </main>
