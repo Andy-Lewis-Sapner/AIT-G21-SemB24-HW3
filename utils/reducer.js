@@ -4,7 +4,6 @@ export const initialState = {
   exchangeMode: "Regular",
   user: typeof window !== "undefined" ? localStorage.getItem("user") : null,
   user_balance: undefined,
-  user_competitions: undefined,
   prices: {},
 }
 

@@ -60,7 +60,9 @@ export default function SellTab({ symbols, rates }) {
           return
         }
         setAmount(0)
-        setSellingMessage(`Sold ${amount} ${symbol} for ${totalCost} USD`)
+        setSellingMessage(
+          `Sold ${amount} ${symbol} for ${totalCost.toFixed(2)} USD`,
+        )
         dispatch({
           type: "SET_USER_BALANCE",
           payload: { ...state.user_balance, [symbol]: newSymbolAmount },

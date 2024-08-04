@@ -65,17 +65,17 @@ export default function Balance({ rates, symbols }) {
           {holdings &&
             Object.entries(holdings).map(([crypto, amount]) => {
               const value =
-                amount.toFixed(2) *
-                state.prices[crypto] *
-                rates[state.preferredCurrency]
+                amount * state.prices[crypto] * rates[state.preferredCurrency]
               return (
                 <div
                   key={crypto}
                   className="bg-gray-100 dark:bg-gray-400 p-4 rounded-lg shadow-md"
                 >
                   <h4 className="text-lg font-medium">{crypto}</h4>
-                  <p className="text-gray-600 dark:text-gray-100">
-                    Amount: {amount.toFixed(2) + "\n"}
+                  <p className="font-semibold text-sm text-gray-600 dark:text-gray-100">
+                    Amount: {amount}
+                  </p>
+                  <p className="font-semibold text-sm text-gray-600 dark:text-gray-100">
                     Value:{" "}
                     {`${value.toFixed(2)}${currencies[state.preferredCurrency]}`}
                   </p>

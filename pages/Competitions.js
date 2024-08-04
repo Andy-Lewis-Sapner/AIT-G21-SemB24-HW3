@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react"
 import supabase from "@/utils/supabaseClient"
 import Meta from "@/components/Meta"
-import { fetchCompetitions } from "@/utils/supabaseService"
+import {
+  fetchCompetitions,
+  fetchData_comp,
+  fetchUser,
+  updateData,
+} from "@/utils/supabaseService"
 import { usePageContext } from "@/utils/context"
 
 const Competition = () => {
@@ -13,26 +18,25 @@ const Competition = () => {
   const [success, setSuccess] = useState(null) // New state for success message
   const [timeLeft, setTimeLeft] = useState(null) // New state for countdown timer (10 hours in seconds)
 
+  const getCompetition = async () => {
+    const competitionsDates = await fetchCompetitions()
+    if (competitionsDates.length === 0) return
+    let currentCompetitionEndTime
+    const now = new Date()
+    competitionsDates.forEach((competition) => {
+      if (
+        new Date(competition.endDate) > now &&
+        new Date(competition.startDate) < now
+      ) {
+        currentCompetitionEndTime = new Date(competition.endDate)
+      }
+    })
+
+    const timeLeft = (currentCompetitionEndTime - now) / 1000
+    setTimeLeft(timeLeft)
+  }
+
   useEffect(() => {
-    const getCompetition = async () => {
-      const competitionsDates = await fetchCompetitions()
-      console.log(competitionsDates)
-      if (competitionsDates.length === 0) return
-      let currentCompetitionEndTime
-      const now = new Date()
-      competitionsDates.forEach((competition) => {
-        if (
-          new Date(competition.endDate) > now &&
-          new Date(competition.startDate) < now
-        ) {
-          currentCompetitionEndTime = new Date(competition.endDate)
-        }
-      })
-
-      const timeLeft = (currentCompetitionEndTime - now) / 1000
-      setTimeLeft(timeLeft)
-    }
-
     getCompetition()
   }, [])
 
@@ -41,9 +45,9 @@ const Competition = () => {
 
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
-        if (prevTime <= 0) {
-          clearInterval(timer)
-          return 0
+        if (prevTime <= 1) {
+          resetCompetition()
+          getCompetition()
         }
         return prevTime - 1
       })
@@ -103,7 +107,7 @@ const Competition = () => {
       return
     }
 
-    if (user !== state.user) {
+    if (userName !== state.user) {
       setError("Can't register other users.")
       setLoading(false)
       return
@@ -143,6 +147,13 @@ const Competition = () => {
   }
 
   const resetCompetition = async () => {
+    const balances = await fetchData_comp()
+    balances.forEach(async (balance) => {
+      const user = await fetchUser(balance.username)
+      if (!user) return
+      const updatedBalance = user.USD + balance.USD
+      await updateData(balance.username, updatedBalance, null, 0, "Users")
+    })
     const { error } = await supabase.from("Balances").delete().neq("id", 0) // This will delete all rows
 
     if (error) {
@@ -165,7 +176,7 @@ const Competition = () => {
     <div>
       <Meta title="Competition" />
 
-      <main className="container mx-auto py-20">
+      <main className="container mx-auto py-20 max-w-[90%]">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-4xl font-bold dark:text-white">Leaderboard</h2>
           <div className="text-lg dark:text-gray-300">
@@ -215,10 +226,10 @@ const Competition = () => {
         >
           <div className="mb-4">
             <label
-              className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
+              className="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-2"
               htmlFor="username"
             >
-              Username
+              Please insert your username to register:
             </label>
             <input
               id="username"
@@ -228,6 +239,9 @@ const Competition = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-900 dark:border-gray-700"
               required
             />
+            <div className="block text-gray-700 dark:text-gray-300 text-sm font-bold mt-2">
+              You must have $200 USD in your account to register.
+            </div>
           </div>
           <button
             type="submit"

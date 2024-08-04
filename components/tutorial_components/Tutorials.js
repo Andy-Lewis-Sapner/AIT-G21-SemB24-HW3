@@ -4,7 +4,7 @@ import CryptoList from "./CryptoList" // Import CryptoList component
 import VideoList from "./VideoList" // Import VideoList component
 
 // Component to fetch and display cryptocurrency data along with tutorial videos
-const Tutorials = () => {
+const Tutorials = ({ symbols }) => {
   const [cryptos, setCryptos] = useState([]) // State to store cryptocurrency data
   const [loading, setLoading] = useState(true) // State to manage loading state
   const [error, setError] = useState(null) // State to manage error state
@@ -18,10 +18,20 @@ const Tutorials = () => {
         ) // API call to fetch data
         const cryptoData = response.data
         // Formatting the fetched data
-        const formattedData = Object.keys(cryptoData).map((key) => ({
-          ...cryptoData[key],
-        }))
-
+        let formattedData
+        if (symbols) {
+          formattedData = Object.keys(cryptoData)
+            .filter((key) => symbols.includes(key))
+            .map((key) => ({
+              ...cryptoData[key],
+              id: key,
+            }))
+        } else {
+          formattedData = Object.keys(cryptoData).map((key) => ({
+            ...cryptoData[key],
+            id: key,
+          }))
+        }
         setCryptos(formattedData) // Setting the formatted data to state
         setLoading(false) // Setting loading to false after data is fetched
       } catch (err) {

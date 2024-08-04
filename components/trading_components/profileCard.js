@@ -28,7 +28,6 @@ export default function ProfileCard({ rates }) {
   useEffect(() => {
     const getBalance = async () => {
       const data = await fetchBalancesForUser(state.user)
-      console.log(data)
       if (Object.keys(data).length > 0) {
         dispatch({ type: "SET_BALANCE", payload: data.USD })
         setHiddenClass("")

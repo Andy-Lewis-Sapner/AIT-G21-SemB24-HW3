@@ -120,28 +120,3 @@ export const fetchCompetitions = async () => {
   }
   return data
 }
-
-export const upsertData = async (username, usdAmount) => {
-  // Check if the username already exists
-  const { data: existingUser, error: fetchError } = await supabase
-    .from("Users")
-    .select("id, USD")
-    .eq("username", username)
-    .single()
-
-  if (fetchError && fetchError.code !== "PGRST116") {
-    console.error("Error fetching user data:", fetchError)
-    return null
-  }
-
-  if (existingUser) {
-    // User exists, update the USD amount
-    const newUsdAmount = existingUser.USD + parseFloat(usdAmount)
-    const success = await updateData(existingUser.id, newUsdAmount)
-    return success ? { id: existingUser.id, username, USD: newUsdAmount } : null
-  } else {
-    // User does not exist, insert a new record
-    const data = await insertData(username, usdAmount)
-    return data ? data[0] : null
-  }
-}
