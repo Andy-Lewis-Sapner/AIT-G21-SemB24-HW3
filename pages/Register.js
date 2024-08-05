@@ -56,7 +56,14 @@ export default function Register() {
 
   const handleRegisterPressed = (e) => {
     setUserMessage("")
-    if (passwordMessage !== "" || confirmPasswordMessage !== "") return
+    if (username.length === 0) {
+      setUserMessage("Please enter a username")
+      return
+    }
+    if (passwordMessage !== "" || confirmPasswordMessage !== "") {
+      setUserMessage("Please fix the errors above")
+      return
+    }
     if (!password || !confirmPassword) {
       setUserMessage("Please enter a password")
       return
