@@ -12,7 +12,10 @@ export default function Withdraw() {
 
   const handleWithdraw = async (e) => {
     e.preventDefault()
-    if (amount <= 0) {
+    if (isNaN(amount)) {
+      setUserMessage("Amount must be a number")
+      return
+    } else if (amount <= 0) {
       setUserMessage("Amount must be greater than 0")
       return
     }
