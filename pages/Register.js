@@ -104,6 +104,7 @@ export default function Register() {
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              required
             />
           </div>
           <div className="mb-4">
@@ -120,6 +121,7 @@ export default function Register() {
               placeholder="Password"
               value={password}
               onChange={handlePasswordChange}
+              required
             />
             {passwordMessage && (
               <p className="text-red-500 dark:text-red-400 text-xs italic pt-1">
@@ -141,6 +143,7 @@ export default function Register() {
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={handleConfirmPasswordChange}
+              required
             />
             {confirmPasswordMessage && (
               <p className="text-red-500 dark:text-red-400 text-xs italic pt-1">
