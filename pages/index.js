@@ -7,18 +7,6 @@ import { usePageContext } from "@/utils/context"
 
 export default function Home() {
   const { state } = usePageContext()
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const res = await fetchData()
-    }
-
-    const fetchBalaces = async () => {
-      const res = await fetchData_comp()
-    }
-
-    fetchUsers()
-    fetchBalaces()
-  })
 
   return (
     <div className="flex flex-col dark:bg-gray-900 dark:text-white">
