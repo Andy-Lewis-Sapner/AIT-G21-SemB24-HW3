@@ -7,11 +7,14 @@ import { fetchUser, updateData } from "@/utils/supabaseService"
 export default function Deposit() {
   const { state, dispatch } = usePageContext()
   const router = useRouter()
-  const [userMessage, setUserMessage] = useState("")
-  const [amount, setAmount] = useState(0)
+  const [userMessage, setUserMessage] = useState("") // State to store messages for the user (e.g., errors)
+  const [amount, setAmount] = useState(0) // State to store the amount to be deposited
 
+  // Handles the deposit process when the form is submitted
   const handleDeposit = async (e) => {
     e.preventDefault()
+
+    // Validation checks for the deposit amount
     if (isNaN(amount)) {
       setUserMessage("Amount must be a number")
       return
@@ -19,7 +22,11 @@ export default function Deposit() {
       setUserMessage("Amount must be greater than 0")
       return
     }
+
+    // Fetch the current user data
     const user = await fetchUser(state.user)
+
+    // Update the user balance with the deposited amount
     const deposit = await updateData(
       state.user,
       user.USD + parseFloat(amount),
@@ -27,20 +34,30 @@ export default function Deposit() {
       0,
       state.exchangeMode === "Competition" ? "Balances" : "Users",
     )
-    if (deposit) router.push("/Trading")
+
+    // Provide feedback based on the success or failure of the withdrawal
+    if (deposit) {
+      setUserMessage("Deposit successful")
+      router.push("/Trading") // Redirect to the Trading page
+    } else {
+      setUserMessage("Deposit failed")
+    }
   }
 
   return (
     <div>
-      <Meta title="Deposit" />
+      <Meta title="Deposit" /> {/* Meta component to set the page title */}
       <div className="w-full m-auto py-32 bg-slate-50 dark:bg-gray-800 h-full">
         <h1 className="text-4xl text-center font-bold text-slate-800 dark:text-gray-200 mb-4 pt-4">
           Deposit
         </h1>
+
+        {/* Deposit form */}
         <form
           className="w-1/2 mx-auto flex flex-col justify-between max-w-[500px]"
           onSubmit={handleDeposit}
         >
+          {/* Input for deposit amount */}
           <div className="mb-4">
             <label
               className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
@@ -57,6 +74,8 @@ export default function Deposit() {
               required
             />
           </div>
+
+          {/* Input for card number */}
           <div className="mb-4">
             <label
               className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
@@ -72,6 +91,8 @@ export default function Deposit() {
               required
             />
           </div>
+
+          {/* Input for expiry date */}
           <div className="mb-4">
             <label
               className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
@@ -87,6 +108,8 @@ export default function Deposit() {
               required
             />
           </div>
+
+          {/* Input for CVV */}
           <div className="mb-4">
             <label
               className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
@@ -102,6 +125,8 @@ export default function Deposit() {
               required
             />
           </div>
+
+          {/* Deposit button and message display */}
           <div className="flex flex-col items-center justify-center pt-2">
             <p className="text-green-500 dark:text-green-400 mb-3">
               {userMessage}

@@ -1,10 +1,10 @@
 export const initialState = {
-  preferredCurrency: "USD",
-  chosenCrypto: "BTC",
-  exchangeMode: "Regular",
-  user: typeof window !== "undefined" ? localStorage.getItem("user") : null,
-  user_balance: undefined,
-  prices: {},
+  preferredCurrency: "USD", // Default currency for transactions and display
+  chosenCrypto: "BTC", // Default cryptocurrency selected
+  exchangeMode: "Regular", // Mode of the exchange, could be 'Regular' or 'Competition'
+  user: typeof window !== "undefined" ? localStorage.getItem("user") : null, // Retrieve the user from localStorage if available
+  user_balance: undefined, // User's balance, will be set later
+  prices: {}, // Object to hold current prices of cryptocurrencies
 }
 
 export const reducer = (state, action) => {

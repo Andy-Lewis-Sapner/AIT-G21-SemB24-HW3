@@ -3,12 +3,13 @@ import { usePageContext } from "@/utils/context"
 
 export default function RealTimeTicker({ rates, symbols }) {
   const { state, dispatch } = usePageContext()
-  const [price, setPrice] = useState(null)
-  const [time, setTime] = useState()
-  const socketRef = useRef(null)
+  const [price, setPrice] = useState(null) // State to store the current price and change indicator
+  const [time, setTime] = useState() // State to store the last update time
+  const socketRef = useRef(null) // Reference to the WebSocket connection
 
-  const wsURL = "wss://mtickers.mtw-testnet.com"
+  const wsURL = "wss://mtickers.mtw-testnet.com" // WebSocket URL for real-time data
 
+  // Dispatches updated prices for all symbols to the global state
   const dispatchAllPrices = (e) => {
     const data = JSON.parse(e.data)
     const updatedPrices = {}
@@ -27,16 +28,18 @@ export default function RealTimeTicker({ rates, symbols }) {
     dispatch({ type: "SET_PRICES", payload: updatedPrices })
   }
 
+  // Configures WebSocket events to handle incoming real-time data
   const configWebsocketEvents = () => {
     if (socketRef.current) {
-      socketRef.current.close()
+      socketRef.current.close() // Close any existing WebSocket connection
     }
 
-    socketRef.current = new WebSocket(wsURL)
+    socketRef.current = new WebSocket(wsURL) // Establish a new WebSocket connection
 
     socketRef.current.onmessage = (e) => {
       const data = JSON.parse(e.data)[state.chosenCrypto]
       if (data === undefined) return
+
       let p = parseFloat(data.p)
       if (rates[state.preferredCurrency]) {
         p = (p * rates[state.preferredCurrency]).toFixed(2)
@@ -51,6 +54,7 @@ export default function RealTimeTicker({ rates, symbols }) {
         </span>
       )
 
+      // Update the price with the change indicator and time
       setPrice(
         <div className="border border-gray-400 p-4 text-center rounded-md">
           {p}
@@ -58,10 +62,11 @@ export default function RealTimeTicker({ rates, symbols }) {
         </div>,
       )
       setTime(new Date(data.t).toLocaleString())
-      dispatchAllPrices(e)
+      dispatchAllPrices(e) // Dispatch all updated prices to the global state
     }
   }
 
+  // Reconfigure WebSocket events when chosen crypto or preferred currency changes
   useEffect(() => {
     configWebsocketEvents()
   }, [state.chosenCrypto, state.preferredCurrency])

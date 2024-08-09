@@ -5,14 +5,15 @@ import { usePageContext } from "@/utils/context"
 export default function Header() {
   const { state, dispatch } = usePageContext()
   const router = useRouter()
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [hiddenClass, setHiddenClass] = useState("")
+  const [menuOpen, setMenuOpen] = useState(false) // State to manage the mobile menu visibility
+  const [hiddenClass, setHiddenClass] = useState("") // State to manage visibility of login/register buttons
   const [darkMode, setDarkMode] = useState(
     () =>
       typeof document !== "undefined" &&
       document.documentElement.classList.contains("dark"),
-  )
+  ) // State to manage dark mode
 
+  // Handles navigation to different pages based on the button clicked
   const handleClick = (text) => {
     if (state.user) router.push("/" + text)
     else {
@@ -22,12 +23,14 @@ export default function Header() {
     }
   }
 
+  // Updates the visibility of login/register buttons based on user authentication status
   useEffect(() => {
     if (state.user) {
       setHiddenClass("hidden")
     } else setHiddenClass("")
   }, [state.user])
 
+  // Initializes the theme based on saved preference in localStorage
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("isDarkmode") === "true"
     setDarkMode(savedDarkMode)
@@ -38,6 +41,7 @@ export default function Header() {
     }
   }, [])
 
+  // Toggles between light and dark mode
   const toggleTheme = () => {
     setDarkMode(!darkMode)
     localStorage.setItem("isDarkmode", !darkMode)
@@ -51,6 +55,7 @@ export default function Header() {
   return (
     <header className="bg-blue-100 dark:bg-blue-900 text-black dark:text-white p-3">
       <div className="max-w-[1000px] w-full mx-auto flex justify-between items-center">
+        {/* Logo or Home Button */}
         <button onClick={() => handleClick("")} className="flex items-center">
           <svg
             fill={darkMode ? "#ffffff" : "#000000"}
@@ -60,13 +65,17 @@ export default function Header() {
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
           >
+            {/* SVG content for logo or home icon */}
             <path d="M0 26.016q0 2.496 1.76 4.224t4.256 1.76h16q2.464 0 4.224-1.76t1.76-4.224v-4h2.016q0.8 0 1.408-0.576t0.576-1.44v-8q0-0.832-0.576-1.408t-1.408-0.576h-2.016v-4q0-2.496-1.76-4.256t-4.224-1.76h-16q-2.496 0-4.256 1.76t-1.76 4.256v20zM4 26.016v-20q0-0.832 0.576-1.408t1.44-0.608h16q0.8 0 1.408 0.608t0.576 1.408v4h-5.984q-0.832 0-1.44 0.576t-0.576 1.408v8q0 0.832 0.576 1.44t1.44 0.576h1.984v1.984h2.016v-1.984h1.984v4q0 0.832-0.576 1.408t-1.408 0.576h-16q-0.832 0-1.44-0.576t-0.576-1.408zM6.016 24q0 0.832 0.576 1.44t1.408 0.576v-2.016h-1.984zM6.016 22.016h1.984v-2.016h-1.984v2.016zM6.016 18.016h1.984v-2.016h-1.984v2.016zM6.016 14.016h1.984v-2.016h-1.984v2.016zM6.016 10.016h1.984v-2.016h-1.984v2.016zM8 8h2.016v-1.984h-2.016v1.984zM10.016 26.016h1.984v-2.016h-1.984v2.016zM12 8h2.016v-1.984h-2.016v1.984zM14.016 26.016h1.984v-2.016h-1.984v2.016zM16 8h2.016v-1.984h-2.016v1.984zM18.016 26.016h1.984v-2.016h-1.984v2.016zM18.016 20v-8h12v8h-12zM20 16q0 0.832 0.576 1.44t1.44 0.576 1.408-0.576 0.576-1.44-0.576-1.408-1.408-0.576-1.44 0.576-0.576 1.408zM20 8h2.016q0-0.832-0.608-1.408t-1.408-0.576v1.984z"></path>
           </svg>
         </button>
+
+        {/* Mobile Menu Toggle Button */}
         <button
           className="block sm:hidden"
           onClick={() => setMenuOpen(!menuOpen)}
         >
+          {/* Hamburger icon for opening menu */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="1.5em"
@@ -78,6 +87,7 @@ export default function Header() {
               d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"
             />
           </svg>
+          {/* Close icon for closing menu */}
           <svg
             className={menuOpen ? "" : "hidden"}
             xmlns="http://www.w3.org/2000/svg"
@@ -90,9 +100,12 @@ export default function Header() {
             />
           </svg>
         </button>
+
+        {/* Mobile Menu Content */}
         <div
           className={`absolute top-[56px] left-0 bg-blue-300 p-3 w-full ${menuOpen ? "block" : "hidden"}`}
         >
+          {/* Menu Items */}
           <button
             className="block py-1 px-2"
             onClick={() => handleClick("Trading")}
@@ -111,6 +124,8 @@ export default function Header() {
           >
             Tutorial
           </button>
+
+          {/* Authentication Buttons */}
           <div className="pt-3">
             <button
               className={`block text-left bg-blue-200 hover:bg-blue-300 active:bg-blue-400 dark:bg-gray-500 dark:hover:bg-gray-600 dark:active:bg-gray-700 rounded-lg py-1 px-2 mb-2 ${hiddenClass}`}
@@ -136,6 +151,8 @@ export default function Header() {
             >
               Log Out
             </button>
+
+            {/* Dark Mode Toggle */}
             <div className="flex items-center pt-2">
               <button
                 className="w-12 h-6 rounded-full bg-white flex items-center transition duration-300 focus:outline-none shadow"
@@ -185,6 +202,8 @@ export default function Header() {
             </div>
           </div>
         </div>
+
+        {/* Desktop Menu Items */}
         <div className="hidden sm:flex justify-start gap-2">
           <button
             className="hover:bg-blue-200 rounded-lg px-2 dark:hover:bg-blue-800"
@@ -205,6 +224,8 @@ export default function Header() {
             Tutorial
           </button>
         </div>
+
+        {/* Desktop Authentication Buttons and Dark Mode Toggle */}
         <div className="hidden sm:flex justify-end gap-4 items-center">
           <button
             className={`bg-blue-200 hover:bg-blue-300 active:bg-blue-400 dark:bg-gray-500 dark:hover:bg-gray-600 dark:active:bg-gray-700 rounded-lg py-1 px-2 ${hiddenClass}`}

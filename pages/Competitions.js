@@ -11,13 +11,14 @@ import { usePageContext } from "@/utils/context"
 
 const Competition = () => {
   const { state, dispatch } = usePageContext()
-  const [participants, setParticipants] = useState([])
-  const [userName, setUserName] = useState("")
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [success, setSuccess] = useState(null) // New state for success message
-  const [timeLeft, setTimeLeft] = useState(null) // New state for countdown timer (10 hours in seconds)
+  const [participants, setParticipants] = useState([]) // State to store the list of participants
+  const [userName, setUserName] = useState("") // State to store the user's name input
+  const [loading, setLoading] = useState(true) // State to manage loading state
+  const [error, setError] = useState(null) // State to store error messages
+  const [success, setSuccess] = useState(null) // State to store success messages
+  const [timeLeft, setTimeLeft] = useState(null) // State to store the countdown timer in seconds
 
+  // Function to fetch the current competition's end time and calculate the time left
   const getCompetition = async () => {
     const competitionsDates = await fetchCompetitions()
     if (competitionsDates.length === 0) return
@@ -36,10 +37,12 @@ const Competition = () => {
     setTimeLeft(timeLeft)
   }
 
+  // Initial fetch for competition data
   useEffect(() => {
     getCompetition()
   }, [])
 
+  // Fetch participants and start a countdown timer
   useEffect(() => {
     fetchParticipants()
 
@@ -56,6 +59,7 @@ const Competition = () => {
     return () => clearInterval(timer)
   }, [])
 
+  // Function to fetch the list of participants from the "Balances" table
   const fetchParticipants = async () => {
     const { data, error } = await supabase
       .from("Balances")
@@ -72,12 +76,14 @@ const Competition = () => {
     }
   }
 
+  // Handles user registration for the competition
   const handleRegister = async (e) => {
     e.preventDefault()
     setLoading(true)
     setSuccess(null) // Clear previous success message
     setError(null) // Clear previous error message
 
+    // Check if user is already registered
     const { data: existingUser, error: existingError } = await supabase
       .from("Balances")
       .select("*")
@@ -95,6 +101,7 @@ const Competition = () => {
       return
     }
 
+    // Fetch user data from "Users" table
     const { data: user, error: userError } = await supabase
       .from("Users")
       .select("*")
@@ -107,12 +114,14 @@ const Competition = () => {
       return
     }
 
+    // Prevent users from registering other users
     if (userName !== state.user) {
       setError("Can't register other users.")
       setLoading(false)
       return
     }
 
+    // Check if user has sufficient balance to register
     if (user.USD < 200) {
       setError("Insufficient balance to register for the competition.")
       setLoading(false)
@@ -121,6 +130,7 @@ const Competition = () => {
 
     const updatedBalance = user.USD - 200
 
+    // Update the user's balance in the "Users" table
     const { error: updateError } = await supabase
       .from("Users")
       .update({ USD: updatedBalance })
@@ -132,6 +142,7 @@ const Competition = () => {
       return
     }
 
+    // Insert user into the "Balances" table for the competition
     const { error } = await supabase
       .from("Balances")
       .insert([{ username: userName, USD: 200 }])
@@ -146,6 +157,7 @@ const Competition = () => {
     }
   }
 
+  // Resets the competition by clearing the "Balances" table and restoring user balances
   const resetCompetition = async () => {
     const balances = await fetchData_comp()
     balances.forEach(async (balance) => {
@@ -164,6 +176,7 @@ const Competition = () => {
     }
   }
 
+  // Formats the time left into days, hours, minutes, and seconds
   const formatTime = (seconds) => {
     const days = Math.floor(seconds / 86400)
     const hrs = Math.floor(seconds / 3600) - days * 24

@@ -11,6 +11,7 @@ export default function Balance({ rates, symbols }) {
   const [currencies, setCurrencies] = useState({})
   const [hiddenFunction, setHiddenFunction] = useState("")
 
+  // Fetches the list of currency symbols from a local JSON file
   useEffect(() => {
     const fetchCurrenciesSymbols = async () => {
       const res = await fetch("./currencies.json")
@@ -21,6 +22,7 @@ export default function Balance({ rates, symbols }) {
     fetchCurrenciesSymbols()
   }, [])
 
+  // Toggles the visibility of certain functions based on the exchange mode
   useEffect(() => {
     if (state.exchangeMode === "Competition") {
       setHiddenFunction("hidden")
@@ -29,6 +31,7 @@ export default function Balance({ rates, symbols }) {
     }
   }, [state.exchangeMode])
 
+  // Fetches the user's balances or holdings based on the exchange mode
   const fetchBalances = async () => {
     let res
     if (state.exchangeMode === "Competition") {
@@ -36,6 +39,8 @@ export default function Balance({ rates, symbols }) {
     } else {
       res = await fetchUser(state.user)
     }
+
+    // Filters holdings to only include symbols provided, sets balance for USD
     const filteredHoldings = Object.entries(res).reduce((acc, [key, value]) => {
       if (symbols.includes(key)) {
         acc[key] = value
@@ -48,15 +53,18 @@ export default function Balance({ rates, symbols }) {
     setHoldings(filteredHoldings)
   }
 
+  // Fetches balances whenever the user or exchange mode changes
   useEffect(() => {
     fetchBalances()
   }, [state.user, state.exchangeMode])
 
+  // Updates user balance in the context and fetches the latest balances
   useEffect(() => {
     fetchBalances()
     dispatch({ type: "SET_USER_BALANCE", payload: holdings })
   }, [state.user_balance])
 
+  // Renders the component with the user's cryptocurrency holdings and balance
   return (
     <div className="p-4 bg-inherit rounded-lg">
       <div className="mb-6">
