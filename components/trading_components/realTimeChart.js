@@ -36,19 +36,18 @@ export default function RealTimeChart({ rates, symbols }) {
   const updateChartData = (symbol, price) => {
     setChartData((prevData) => {
       const newData = { ...prevData }
+
       if (newData.labels.length >= maxPoints) {
         // Shift data left when maxPoints is exceeded
-        newData.labels = newData.labels
-          .slice(15)
-          .concat(new Array(15).fill(null))
-        newData.datasets[0].data = newData.datasets[0].data
-          .slice(15)
-          .concat(new Array(15).fill(null))
+        newData.labels.shift()
+        newData.datasets[0].data.shift()
       }
+
       // Add the new time and price data
       newData.labels.push(formatTime(Date.now()))
       const rate = rates[state.preferredCurrency] || 1
       newData.datasets[0].data.push(price * rate)
+
       return newData
     })
   }
@@ -56,6 +55,12 @@ export default function RealTimeChart({ rates, symbols }) {
   // Initializes the Chart.js instance and updates it when chartData changes
   useEffect(() => {
     const ctx = chartRef.current.getContext("2d")
+
+    // Create a gradient for the line
+    const gradient = ctx.createLinearGradient(0, 0, 0, 300)
+    gradient.addColorStop(0, "rgba(75, 192, 192, 0.5)")
+    gradient.addColorStop(1, "rgba(75, 192, 192, 0)")
+
     chartInstance.current = new Chart(ctx, {
       type: "line",
       data: chartData,
@@ -65,42 +70,63 @@ export default function RealTimeChart({ rates, symbols }) {
         animation: false,
         plugins: {
           legend: {
-            display: false,
+            display: true,
+            labels: {
+              color: "#333", // Darker text color
+              font: {
+                size: 14,
+              },
+            },
+          },
+          tooltip: {
+            backgroundColor: "rgba(255, 255, 255, 0.8)",
+            titleColor: "#333",
+            bodyColor: "#333",
+            titleFont: {
+              size: 14,
+            },
+            bodyFont: {
+              size: 12,
+            },
+            borderColor: "#ddd",
+            borderWidth: 1,
           },
         },
         scales: {
           x: {
-            axis: {
-              color: "#9AA5A9",
-            },
             ticks: {
-              color: "#9AA5A9",
+              color: "#333", // Darker tick color
               font: {
-                size: 10,
+                size: 12,
               },
             },
             grid: {
               display: false,
-              color: "#9AA5A9",
-              borderColor: "#9AA5A9",
-              borderDash: [3, 3],
             },
           },
           y: {
-            axis: {
-              color: "#9AA5A9",
-            },
             ticks: {
-              color: "#9AA5A9",
+              color: "#333", // Darker tick color
               font: {
-                size: 10,
+                size: 12,
               },
             },
             grid: {
-              display: false,
-              color: "#9AA5A9",
-              borderColor: "#9AA5A9",
+              color: "#eee", // Light gray grid lines
             },
+          },
+        },
+        elements: {
+          line: {
+            tension: 0.3, // Smooth the line curve
+            backgroundColor: gradient,
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 2,
+          },
+          point: {
+            radius: 3,
+            backgroundColor: "rgba(75, 192, 192, 1)",
+            hoverRadius: 5,
           },
         },
       },
