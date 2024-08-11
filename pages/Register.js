@@ -31,7 +31,7 @@ export default function Register() {
   const handlePasswordChange = (e) => {
     const newPassword = e.target.value
     setPassword(newPassword)
-    if (newPassword.length <= 5) {
+    if (newPassword.length < 5) {
       setPasswordMessage("Password must be at least 5 characters long.")
     } else {
       setPasswordMessage("")
