@@ -1,9 +1,13 @@
 import Meta from "@/components/Meta"
-import { fetchUsernamesAndIDs, insertNewUser } from "@/utils/supabaseService"
 import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/router"
 import { usePageContext } from "@/utils/context"
+import {
+  handlePasswordChange,
+  handleConfirmPasswordChange,
+  handleRegisterPressed,
+} from "@/utils/logic/loginAndRegisterFunc"
 
 /**
  * Register function is a React component that renders a form for user registration.
@@ -22,73 +26,6 @@ export default function Register() {
   const [confirmPasswordMessage, setConfirmPasswordMessage] = useState("")
   const [userMessage, setUserMessage] = useState("")
 
-  /**
-   * Handles the change event of the password input field.
-   *
-   * @param {Event} e - The change event object.
-   * @return {void} This function does not return anything.
-   */
-  const handlePasswordChange = (e) => {
-    const newPassword = e.target.value
-    setPassword(newPassword)
-    if (newPassword.length < 5) {
-      setPasswordMessage("Password must be at least 5 characters long.")
-    } else {
-      setPasswordMessage("")
-    }
-  }
-
-  /**
-   * Handles the change event of the confirm password input field.
-   *
-   * @param {Event} e - The change event object.
-   * @return {void} This function does not return anything.
-   */
-  const handleConfirmPasswordChange = (e) => {
-    const newConfirmPassword = e.target.value
-    setConfirmPassword(newConfirmPassword)
-    if (newConfirmPassword !== password) {
-      setConfirmPasswordMessage("Passwords do not match.")
-    } else {
-      setConfirmPasswordMessage("")
-    }
-  }
-
-  const handleRegisterPressed = (e) => {
-    setUserMessage("")
-    if (username.length === 0) {
-      setUserMessage("Please enter a username")
-      return
-    }
-    if (passwordMessage !== "" || confirmPasswordMessage !== "") {
-      setUserMessage("Please fix the errors above")
-      return
-    }
-    if (!password || !confirmPassword) {
-      setUserMessage("Please enter a password")
-      return
-    }
-    if (password !== confirmPassword) {
-      setUserMessage("Passwords do not match")
-      return
-    }
-    setConfirmPasswordMessage("")
-    const addUser = async () => {
-      const data = await fetchUsernamesAndIDs()
-      const max_id = Math.max(...data.map((user) => user.id))
-      const usernames = data.map((user) => user.username)
-      const usernameFromDB = usernames.find((user) => user === username)
-      if (usernameFromDB) {
-        setConfirmPasswordMessage("Username already exists")
-        return
-      }
-      await insertNewUser(max_id + 1, username, password)
-      dispatch({ type: "SET_USER", payload: username })
-      router.push("/Trading")
-    }
-    addUser()
-  }
-
   return (
     <div>
       <Meta title="Register" />
@@ -105,7 +42,7 @@ export default function Register() {
               Username
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-900 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="form-input"
               id="username"
               type="text"
               placeholder="Username"
@@ -122,12 +59,14 @@ export default function Register() {
               Password
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-900 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="form-input"
               id="password"
               type="password"
               placeholder="Password"
               value={password}
-              onChange={handlePasswordChange}
+              onChange={(e) =>
+                handlePasswordChange(e, setPassword, setPasswordMessage)
+              }
               required
             />
             {passwordMessage && (
@@ -144,12 +83,19 @@ export default function Register() {
               Confirm Password
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-900 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="form-input"
               id="confirmPassword"
               type="password"
               placeholder="Confirm Password"
               value={confirmPassword}
-              onChange={handleConfirmPasswordChange}
+              onChange={(e) =>
+                handleConfirmPasswordChange(
+                  e,
+                  setConfirmPassword,
+                  setConfirmPasswordMessage,
+                  password,
+                )
+              }
               required
             />
             {confirmPasswordMessage && (
@@ -166,9 +112,21 @@ export default function Register() {
               </Link>
             </p>
             <button
-              className="bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="form-button"
               type="button"
-              onClick={handleRegisterPressed}
+              onClick={() =>
+                handleRegisterPressed(
+                  setUserMessage,
+                  setConfirmPasswordMessage,
+                  username,
+                  password,
+                  confirmPassword,
+                  passwordMessage,
+                  confirmPasswordMessage,
+                  dispatch,
+                  router,
+                )
+              }
             >
               Register
             </button>

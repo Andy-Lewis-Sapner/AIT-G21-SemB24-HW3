@@ -2,32 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-/* :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.competitions-table {
+  @apply min-w-full bg-white dark:bg-gray-800 dark:border dark:border-gray-700;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.competition-register-button {
+  @apply bg-blue-600 text-white dark:bg-blue-500 dark:text-white px-6 py-3 rounded-xl text-lg w-full;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.register-to-competition-input {
+  @apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 leading-tight focus:outline-none dark:bg-gray-900 dark:border-gray-700;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-} */
+.form-input {
+  @apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-300 leading-tight focus:outline-none;
+}
+
+.form-button {
+  @apply bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none;
+}
+
+.withdraw-button {
+  @apply bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800;
+}
+
+.deposit-button {
+  @apply bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800;
+}
+
+.logout-button {
+  @apply w-full text-left bg-blue-200 hover:bg-blue-300 active:bg-blue-400 dark:bg-gray-500 dark:hover:bg-gray-600 dark:active:bg-gray-700 rounded-lg py-1 px-2;
+}
+
+.login-register-buttons {
+  @apply text-left bg-blue-200 hover:bg-blue-300 active:bg-blue-400 dark:bg-gray-500 dark:hover:bg-gray-600 dark:active:bg-gray-700 rounded-lg py-1 px-2 mb-2;
+}

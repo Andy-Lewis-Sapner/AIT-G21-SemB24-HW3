@@ -2,52 +2,13 @@ import Meta from "@/components/Meta"
 import { useState } from "react"
 import { useRouter } from "next/router"
 import { usePageContext } from "@/utils/context"
-import { fetchUser, updateData } from "@/utils/supabaseService"
+import { handleWithdraw } from "@/utils/logic/depositAndWithdrawFunc"
 
 export default function Withdraw() {
   const { state } = usePageContext() // Access the global state
   const router = useRouter() // Hook for navigation
   const [userMessage, setUserMessage] = useState("") // State to store user feedback messages
   const [amount, setAmount] = useState(0) // State to store the withdrawal amount
-
-  // Handle the withdrawal process when the form is submitted
-  const handleWithdraw = async (e) => {
-    e.preventDefault()
-
-    // Validate the withdrawal amount
-    if (isNaN(amount)) {
-      setUserMessage("Amount must be a number")
-      return
-    } else if (amount <= 0) {
-      setUserMessage("Amount must be greater than 0")
-      return
-    }
-
-    // Fetch the user's current balance
-    const user = await fetchUser(state.user)
-
-    // Check if the user has sufficient balance for the withdrawal
-    if (amount > user.USD) {
-      setUserMessage("Insufficient balance")
-    } else {
-      // Update the user's balance after withdrawal
-      const withdraw = await updateData(
-        state.user,
-        user.USD - amount,
-        null,
-        0,
-        state.exchangeMode === "Competition" ? "Balances" : "Users",
-      )
-
-      // Provide feedback based on the success or failure of the withdrawal
-      if (withdraw) {
-        setUserMessage("Withdrawal successful")
-        router.push("/Trading") // Redirect to the Trading page
-      } else {
-        setUserMessage("Withdrawal failed")
-      }
-    }
-  }
 
   return (
     <div>
@@ -58,7 +19,9 @@ export default function Withdraw() {
         </h1>
         <form
           className="w-1/2 mx-auto flex flex-col justify-between max-w-[500px]"
-          onSubmit={handleWithdraw} // Handle the form submission
+          onSubmit={(e) =>
+            handleWithdraw(e, amount, setUserMessage, state, router)
+          } // Handle the form submission
         >
           {/* Input for withdrawal amount */}
           <div className="mb-4">
@@ -69,7 +32,7 @@ export default function Withdraw() {
               Amount
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="form-input"
               id="amount"
               type="text"
               placeholder="Amount"
@@ -87,7 +50,7 @@ export default function Withdraw() {
               Card Number
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="form-input"
               id="cardNumber"
               type="text"
               placeholder="Card Number"
@@ -104,7 +67,7 @@ export default function Withdraw() {
               Expiration Date
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="form-input"
               id="expiryDate"
               type="text"
               placeholder="MM/YY"
@@ -121,7 +84,7 @@ export default function Withdraw() {
               CVV
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="form-input"
               id="cvv"
               type="text"
               placeholder="CVV"
@@ -140,10 +103,7 @@ export default function Withdraw() {
             >
               {userMessage}
             </p>
-            <button
-              className="bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="submit"
-            >
+            <button className="form-button" type="submit">
               Withdraw
             </button>
           </div>

@@ -1,4 +1,4 @@
-export const factsAndJokes = [
+const factsAndJokes = [
   "Bitcoin’s First Transaction: The first real-world transaction with Bitcoin was for two pizzas, costing 10,000 BTC.",
   "Dogecoin’s Origin: Dogecoin started as a joke based on the Doge meme featuring a Shiba Inu.",
   "Ethereum’s Launch: Ethereum was proposed in late 2013 by Vitalik Buterin and launched in 2015.",
@@ -94,3 +94,11 @@ export const factsAndJokes = [
   "Blockchain-based Supply Chain Management: Blockchain technology is used to enhance transparency and traceability in supply chain management by recording every step of the process on the blockchain.",
   "Crypto Market Analysis: Crypto market analysis involves studying price trends, trading volumes, and other data to make informed investment decisions.",
 ]
+
+// Function to select and display a random fact or joke from the list
+export const getRandomFactOrJoke = (setFactOrJoke) => {
+  const randomIndex = Math.floor(Math.random() * factsAndJokes.length) // Select a random index
+  const selectedFactOrJoke = factsAndJokes[randomIndex] // Get the fact or joke at the random index
+  const [label, content] = selectedFactOrJoke.split(": ") // Split the string into label and content
+  setFactOrJoke({ label, content }) // Update the state with the new fact or joke
+}

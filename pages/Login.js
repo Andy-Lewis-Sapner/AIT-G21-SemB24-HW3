@@ -1,9 +1,9 @@
 import Meta from "@/components/Meta"
-import { fetchData } from "@/utils/supabaseService"
 import { useState } from "react"
 import { usePageContext } from "@/utils/context"
 import { useRouter } from "next/router"
 import Link from "next/link"
+import { checkUserExists } from "@/utils/logic/loginAndRegisterFunc"
 
 export default function Login() {
   const router = useRouter()
@@ -11,28 +11,6 @@ export default function Login() {
   const [username, setUsername] = useState("") // State to manage the entered username
   const [password, setPassword] = useState("") // State to manage the entered password
   const [userMessage, setUserMessage] = useState("") // State to manage the user feedback message
-
-  // Function to handle the login process when the login button is pressed
-  const handleLoginPressed = (e) => {
-    const checkUserExists = async () => {
-      const res = await fetchData() // Fetch user data from the database
-      const user = Object.entries(res).find(([key, value]) => {
-        return value.username === username && value.password === password // Check if the entered username and password match any user
-      })
-      if (user) {
-        setUserMessage("") // Clear any previous error message
-        dispatch({
-          type: "SET_USER",
-          payload: user[1].username, // Set the logged-in user in the global state
-        })
-        router.push("/Trading") // Redirect to the Trading page upon successful login
-      } else {
-        setUserMessage("Invalid username or password") // Show error message if credentials are invalid
-      }
-    }
-
-    checkUserExists() // Execute the user existence check
-  }
 
   return (
     <div>
@@ -51,7 +29,7 @@ export default function Login() {
               Username
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-900 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="form-input"
               id="username"
               type="text"
               placeholder="Username"
@@ -70,7 +48,7 @@ export default function Login() {
               Password
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-900 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="form-input"
               id="password"
               type="password"
               placeholder="Password"
@@ -94,9 +72,17 @@ export default function Login() {
               </Link>
             </p>
             <button
-              className="bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="form-button"
               type="button"
-              onClick={handleLoginPressed} // Handle login when the button is clicked
+              onClick={(e) =>
+                checkUserExists(
+                  setUserMessage,
+                  dispatch,
+                  username,
+                  password,
+                  router,
+                )
+              } // Handle login when the button is clicked
             >
               Login
             </button>

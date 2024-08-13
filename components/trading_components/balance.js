@@ -1,7 +1,11 @@
-import { fetchBalancesForUser, fetchUser } from "@/utils/supabaseService"
 import { useEffect, useState } from "react"
 import { usePageContext } from "@/utils/context"
 import { useRouter } from "next/router"
+import {
+  fetchCurrenciesSymbols,
+  setHidden,
+  fetchBalances,
+} from "@/utils/logic/balanceFunc"
 
 export default function Balance({ rates, symbols }) {
   const router = useRouter()
@@ -13,55 +17,23 @@ export default function Balance({ rates, symbols }) {
 
   // Fetches the list of currency symbols from a local JSON file
   useEffect(() => {
-    const fetchCurrenciesSymbols = async () => {
-      const res = await fetch("./currencies.json")
-      const data = await res.json()
-      setCurrencies(data)
-    }
-
-    fetchCurrenciesSymbols()
+    fetchCurrenciesSymbols(setCurrencies)
   }, [])
 
   // Toggles the visibility of certain functions based on the exchange mode
   useEffect(() => {
-    if (state.exchangeMode === "Competition") {
-      setHiddenFunction("hidden")
-    } else {
-      setHiddenFunction("")
-    }
+    setHidden(state, setHiddenFunction)
   }, [state.exchangeMode])
-
-  // Fetches the user's balances or holdings based on the exchange mode
-  const fetchBalances = async () => {
-    let res
-    if (state.exchangeMode === "Competition") {
-      res = await fetchBalancesForUser(state.user)
-    } else {
-      res = await fetchUser(state.user)
-    }
-
-    // Filters holdings to only include symbols provided, sets balance for USD
-    const filteredHoldings = Object.entries(res).reduce((acc, [key, value]) => {
-      if (symbols.includes(key)) {
-        acc[key] = value
-      }
-      if (key === "USD") {
-        setBalance(value)
-      }
-      return acc
-    }, {})
-    setHoldings(filteredHoldings)
-  }
 
   // Fetches balances whenever the user or exchange mode changes
   useEffect(() => {
-    fetchBalances()
+    fetchBalances(state, symbols, setHoldings, setBalance)
   }, [state.user, state.exchangeMode])
 
   // Updates user balance in the context and fetches the latest balances
   useEffect(() => {
-    fetchBalances()
-    dispatch({ type: "SET_USER_BALANCE", payload: holdings })
+    fetchBalances(state, symbols, setHoldings, setBalance)
+    // dispatch({ type: "SET_USER_BALANCE", payload: holdings })
   }, [state.user_balance])
 
   // Renders the component with the user's cryptocurrency holdings and balance
@@ -72,8 +44,7 @@ export default function Balance({ rates, symbols }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-inherit">
           {holdings &&
             Object.entries(holdings).map(([crypto, amount]) => {
-              const value =
-                amount * state.prices[crypto] * rates[state.preferredCurrency]
+              let value = (amount * state.prices[crypto]).toFixed(2)
               return (
                 <div
                   key={crypto}
@@ -84,8 +55,7 @@ export default function Balance({ rates, symbols }) {
                     Amount: {amount}
                   </p>
                   <p className="font-semibold text-sm text-gray-600 dark:text-gray-100">
-                    Value:{" "}
-                    {`${value.toFixed(2)}${currencies[state.preferredCurrency]}`}
+                    Value: {`${value}${currencies[state.preferredCurrency]}`}
                   </p>
                 </div>
               )
@@ -103,21 +73,13 @@ export default function Balance({ rates, symbols }) {
       </div>
       <div className="flex justify-center gap-4 mt-4">
         <button
-          className={
-            "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800" +
-            " " +
-            hiddenFunction
-          }
+          className={"deposit-button" + ` ${hiddenFunction}`}
           onClick={() => router.push("/Deposit")}
         >
           Deposit
         </button>
         <button
-          className={
-            "bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800" +
-            " " +
-            hiddenFunction
-          }
+          className={"withdraw-button" + ` ${hiddenFunction}`}
           onClick={() => router.push("/Withdraw")}
         >
           Withdraw

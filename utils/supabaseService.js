@@ -132,3 +132,24 @@ export const fetchCompetitions = async () => {
   }
   return data // Return the fetched data
 }
+
+// Function to fetch the list of participants from the "Balances" table
+export const fetchParticipants = async (
+  setError,
+  setLoading,
+  setParticipants,
+) => {
+  const { data, error } = await supabase
+    .from("Balances")
+    .select("*")
+    .order("USD", { ascending: false })
+    .limit(10)
+
+  if (error) {
+    setError(error.message)
+    setLoading(false)
+  } else {
+    setParticipants(data)
+    setLoading(false)
+  }
+}

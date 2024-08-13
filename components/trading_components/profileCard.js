@@ -1,7 +1,7 @@
 import { usePageContext } from "@/utils/context"
-import { fetchBalancesForUser } from "@/utils/supabaseService"
 import Image from "next/image"
 import React, { useEffect, useState } from "react"
+import { changeModeButton, getBalance } from "@/utils/logic/profileCardFunc"
 
 export default function ProfileCard({ rates }) {
   const { state, dispatch } = usePageContext()
@@ -15,32 +15,9 @@ export default function ProfileCard({ rates }) {
     dispatch({ type: "SET_PREFERED_CURRENCY", payload: "USD" })
   }, [dispatch])
 
-  // Handles the mode switch between "Competition" and "Regular"
-  const changeModeButton = () => {
-    setModeButton((prevMode) =>
-      prevMode === "Competition" ? "Regular" : "Competition",
-    )
-    dispatch({ type: "SET_EXCHANGE_MODE", payload: modeButton })
-  }
-
-  // Handles changes to the preferred currency selection
-  const handleSelectChange = (e) => {
-    dispatch({ type: "SET_PREFERED_CURRENCY", payload: e.target.value })
-  }
-
   // Fetches user balance and updates the component state based on the balance
   useEffect(() => {
-    const getBalance = async () => {
-      const data = await fetchBalancesForUser(state.user)
-      if (Object.keys(data).length > 0) {
-        dispatch({ type: "SET_BALANCE", payload: data.USD }) // Update the balance in the global state
-        setHiddenClass("") // Show elements if balance data is available
-      } else {
-        setHiddenClass("hidden") // Hide elements if no balance data is available
-      }
-    }
-
-    getBalance()
+    getBalance(dispatch, setHiddenClass, state)
   }, [state.exchangeMode, state.user, dispatch])
 
   return (
@@ -62,13 +39,15 @@ export default function ProfileCard({ rates }) {
       <div className="flex flex-row gap-4">
         <button
           className={"text-blue-500 " + hiddenClass}
-          onClick={changeModeButton}
+          onClick={() => changeModeButton(setModeButton, modeButton, dispatch)}
         >
           {"Switch to " + modeButton + " Mode"}
         </button>
         <select
           className="rounded-lg bg-inherit"
-          onChange={handleSelectChange}
+          onChange={(e) =>
+            dispatch({ type: "SET_PREFERED_CURRENCY", payload: e.target.value })
+          }
           value={state.preferedCurrency}
         >
           {rates && Object.keys(rates).length > 0 ? (

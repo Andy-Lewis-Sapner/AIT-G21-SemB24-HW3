@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
-import axios from "axios"
 import CryptoList from "./CryptoList" // Import CryptoList component
 import VideoList from "./VideoList" // Import VideoList component
+import { fetchCryptos } from "@/utils/logic/tutorialsFunc"
 
 // Component to fetch and display cryptocurrency data along with tutorial videos
 const Tutorials = ({ symbols }) => {
@@ -11,37 +11,7 @@ const Tutorials = ({ symbols }) => {
 
   // Fetch cryptocurrency data on component mount
   useEffect(() => {
-    const fetchCryptos = async () => {
-      try {
-        const response = await axios.get(
-          "https://api.mtw-testnet.com/assets/all",
-        ) // API call to fetch data
-        const cryptoData = response.data
-        // Formatting the fetched data
-        let formattedData
-        if (symbols) {
-          formattedData = Object.keys(cryptoData)
-            .filter((key) => symbols.includes(key))
-            .map((key) => ({
-              ...cryptoData[key],
-              id: key,
-            }))
-        } else {
-          formattedData = Object.keys(cryptoData).map((key) => ({
-            ...cryptoData[key],
-            id: key,
-          }))
-        }
-        setCryptos(formattedData) // Setting the formatted data to state
-        setLoading(false) // Setting loading to false after data is fetched
-      } catch (err) {
-        console.error("Error fetching data:", err.message) // Logging error in console
-        setError("Failed to fetch data. Please try again later.") // Setting error state
-        setLoading(false) // Setting loading to false on error
-      }
-    }
-
-    fetchCryptos() // Call the fetch function
+    fetchCryptos(setCryptos, setLoading, setError, symbols) // Call the fetch function
   }, []) // Empty dependency array to run once on mount
 
   // Loading state rendering

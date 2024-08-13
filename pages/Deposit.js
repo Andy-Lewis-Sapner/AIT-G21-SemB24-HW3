@@ -2,47 +2,13 @@ import Meta from "@/components/Meta"
 import { useState } from "react"
 import { useRouter } from "next/router"
 import { usePageContext } from "@/utils/context"
-import { fetchUser, updateData } from "@/utils/supabaseService"
+import { handleDeposit } from "@/utils/logic/depositAndWithdrawFunc"
 
 export default function Deposit() {
   const { state, dispatch } = usePageContext()
   const router = useRouter()
   const [userMessage, setUserMessage] = useState("") // State to store messages for the user (e.g., errors)
   const [amount, setAmount] = useState(0) // State to store the amount to be deposited
-
-  // Handles the deposit process when the form is submitted
-  const handleDeposit = async (e) => {
-    e.preventDefault()
-
-    // Validation checks for the deposit amount
-    if (isNaN(amount)) {
-      setUserMessage("Amount must be a number")
-      return
-    } else if (amount <= 0) {
-      setUserMessage("Amount must be greater than 0")
-      return
-    }
-
-    // Fetch the current user data
-    const user = await fetchUser(state.user)
-
-    // Update the user balance with the deposited amount
-    const deposit = await updateData(
-      state.user,
-      user.USD + parseFloat(amount),
-      null,
-      0,
-      state.exchangeMode === "Competition" ? "Balances" : "Users",
-    )
-
-    // Provide feedback based on the success or failure of the withdrawal
-    if (deposit) {
-      setUserMessage("Deposit successful")
-      router.push("/Trading") // Redirect to the Trading page
-    } else {
-      setUserMessage("Deposit failed")
-    }
-  }
 
   return (
     <div>
@@ -55,7 +21,9 @@ export default function Deposit() {
         {/* Deposit form */}
         <form
           className="w-1/2 mx-auto flex flex-col justify-between max-w-[500px]"
-          onSubmit={handleDeposit}
+          onSubmit={(e) =>
+            handleDeposit(e, amount, setUserMessage, state, router)
+          }
         >
           {/* Input for deposit amount */}
           <div className="mb-4">
@@ -66,7 +34,7 @@ export default function Deposit() {
               Amount
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="form-input"
               id="amount"
               type="text"
               placeholder="Amount"
@@ -84,7 +52,7 @@ export default function Deposit() {
               Card Number
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="form-input"
               id="cardNumber"
               type="text"
               placeholder="Card Number"
@@ -98,10 +66,10 @@ export default function Deposit() {
               className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
               htmlFor="expiryDate"
             >
-              Expiry Date
+              Expiration Date
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="form-input"
               id="expiryDate"
               type="text"
               placeholder="MM/YY"
@@ -118,7 +86,7 @@ export default function Deposit() {
               CVV
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="form-input"
               id="cvv"
               type="text"
               placeholder="CVV"
@@ -131,10 +99,7 @@ export default function Deposit() {
             <p className="text-green-500 dark:text-green-400 mb-3">
               {userMessage}
             </p>
-            <button
-              className="bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="submit"
-            >
+            <button className="form-button" type="submit">
               Deposit
             </button>
           </div>
